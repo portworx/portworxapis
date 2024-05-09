@@ -1,0 +1,117 @@
+// Please use the following editor setup for this file:
+// Tab size=2; Tabs as spaces; Clean up trailing whitepsace
+//
+// In vim add: au FileType proto setl sw=2 ts=2 expandtab list
+//
+// In vscode install vscode-proto3 extension and add this to your settings.json:
+//    "[proto3]": {
+//        "editor.tabSize": 2,
+//        "editor.insertSpaces": true,
+//        "editor.rulers": [80],
+//        "editor.detectIndentation": true,
+//        "files.trimTrailingWhitespace": true
+//    }
+//
+syntax = "proto3";
+
+package public.portworx.pds.image.v1;
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "public/portworx/common/apiv1/meta.proto";
+import "public/portworx/common/apiv1/pagination.proto";
+import "public/portworx/common/apiv1/sort.proto";
+
+option go_package = "github.com/portworx/portworxapis/proto/public/portworx/pds/catalog/images/apiv1;image";
+option java_multiple_files = true;
+option java_package = "com.public.portworx.pds.image.v1";
+option java_outer_classname = "ImagesProto";
+
+// ImageService serves image resource APIs.
+// This is a service endpoint which allows PDS users to get information of all supported data service version's images.
+service ImageService {
+  // GetImage API returns the information about the specified image.
+  rpc GetImage(GetImageRequest)
+    returns (Image) {
+      option(google.api.http) = {
+        get: "/pds/v1/catalog/images/{id}"
+      };
+  }
+
+  // ListImages API lists the data service images.
+  rpc ListImages(ListImagesRequest)
+    returns (ListImagesResponse) {
+    option(google.api.http) = {
+      get: "/pds/v1/catalog/images"
+    };
+  }
+}
+
+// Resource representing the data service image.
+message Image {
+  // Metadata of the resource.
+  public.portworx.common.v1.Meta meta = 1;
+
+  // Information related to the data service image.
+  Info info = 2;
+}
+
+// Information related to the data service image.
+message Info {
+  // Reference of the image.
+  References references = 1;
+  // Image registry where the image is stored.
+  string registry = 2;
+  // Image registry namespace where the image is stored.
+  string namespace = 3;
+  // Tag associated with the image.
+  string tag = 4;
+  // Build version of the image.
+  string build = 5;
+  // Flag indicating if TLS is supported for a data service using this image.
+  bool tls_support = 6;
+  // Capabilities associated with this image.
+  map<string, string> capabilities = 7;
+  // Additional images associated with this data service image.
+  map<string, string> additional_images = 8;
+}
+
+// References to other resources.
+message References {
+  // UID of the Data service.
+  string data_service_id = 1;
+  // UID of the Data service version.
+  string data_service_version_id = 2;
+}
+
+// Request to get the image details.
+message GetImageRequest {
+  // UID of the image.
+  string id = 1;
+}
+
+// Request to list images for specified data service, version.
+message ListImagesRequest {
+  // Only include the latest image for each data service version id.
+  bool latest = 1;
+  // UID of the data service.
+  string data_service_id = 2;
+  // UID of the data service version.
+  string data_service_version_id = 3;
+  // Sorting details using which requested list of data service images to be sorted.
+  public.portworx.common.v1.Sort sort = 4;
+  // Pagination parameters for listing data service images.
+  public.portworx.common.v1.PageBasedPaginationRequest pagination = 5 [(google.api.field_behavior) = OPTIONAL];
+
+}
+
+// Response to list images request.
+message ListImagesResponse {
+  // List of images.
+  repeated Image images = 1;
+
+  // Pagination metadata for this response.
+  // (-- api-linter: core::0132::response-unknown-fields=disabled
+  //     aip.dev/not-precedent: We need this field for pagination. --)
+  public.portworx.common.v1.PageBasedPaginationResponse pagination = 2;
+}

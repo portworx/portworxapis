@@ -1,0 +1,594 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "public/portworx/platform/invitation/apiv1/invitation.proto",
+        "version": "version not set"
+    },
+    "tags": [
+        {
+            "name": "InvitationService"
+        }
+    ],
+    "paths": {
+        "/core/v1/invite": {
+            "get": {
+                "summary": "ListInvitation API lists invitation in an account/tenant/project.",
+                "operationId": "InvitationService_ListInvitations",
+                "responses": {
+                    "200": {
+                        "description": "A successful response.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/v1ListInvitationsResponse"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "An unexpected error response.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/googlerpcStatus"
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "accountId",
+                        "description": "Account UID to which the user has been invited. User can be invited to multiple accounts.",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "tenantId",
+                        "description": "Tenant UID to which the user has been invited. User can be invited to multiple tenants.",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "projectId",
+                        "description": "Project UID to which the user has been invited. User can be invited to multiple projects.",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "pagination.pageNumber",
+                        "description": "Page number is the page number to return based on the size.",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "pagination.pageSize",
+                        "description": "Page size is the maximum number of records to include per page.",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "tags": [
+                    "InvitationService"
+                ]
+            },
+            "post": {
+                "summary": "CreateInvitation API creates an invitation.",
+                "operationId": "InvitationService_CreateInvitation",
+                "responses": {
+                    "200": {
+                        "description": "A successful response.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/v1Invitation"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "An unexpected error response.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/googlerpcStatus"
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/v1CreateInvitationRequest"
+                            }
+                        }
+                    },
+                    "description": "CreateInvitationRequest is the request message for invitation.",
+                    "required": true
+                },
+                "tags": [
+                    "InvitationService"
+                ]
+            }
+        },
+        "/core/v1/invite/{uid}": {
+            "get": {
+                "summary": "GetInvitation deletes the specified invitation from the system.",
+                "operationId": "InvitationService_GetInvitation",
+                "responses": {
+                    "200": {
+                        "description": "A successful response.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/v1Invitation"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "An unexpected error response.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/googlerpcStatus"
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "description": "UID of the invitation.",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "tags": [
+                    "InvitationService"
+                ]
+            },
+            "delete": {
+                "summary": "DeleteInvitation deletes the specified invitation from the system.",
+                "operationId": "InvitationService_DeleteInvitation",
+                "responses": {
+                    "200": {
+                        "description": "A successful response.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {}
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "An unexpected error response.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/googlerpcStatus"
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "description": "UID is the unique ID of the invitation.",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "tags": [
+                    "InvitationService"
+                ]
+            }
+        },
+        "/core/v1/invite:accept": {
+            "post": {
+                "summary": "AcceptInvitation API accepts the invitation from the system.",
+                "operationId": "InvitationService_AcceptInvitation",
+                "responses": {
+                    "200": {
+                        "description": "A successful response.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/v1AcceptInvitationResponse"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "An unexpected error response.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/googlerpcStatus"
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/v1AcceptInvitationRequest"
+                            }
+                        }
+                    },
+                    "description": "AcceptInvitationRequest is the request message to accept an invitation.",
+                    "required": true
+                },
+                "tags": [
+                    "InvitationService"
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "StatusPhase": {
+                "type": "string",
+                "enum": [
+                    "PHASE_UNSPECIFIED",
+                    "PENDING",
+                    "ACCEPTED"
+                ],
+                "default": "PHASE_UNSPECIFIED",
+                "description": "Phase represents the current state of the invitation.\nThis will be useful later, when we support resend, expire flows. Currently only pending will be supported.\n\n - PHASE_UNSPECIFIED: Invitation status unspecified.\n - PENDING: Invitation acceptance pending.\n - ACCEPTED: Invitation Accepted."
+            },
+            "googlerpcStatus": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "details": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/protobufAny"
+                        }
+                    }
+                }
+            },
+            "invitationv1Status": {
+                "type": "object",
+                "properties": {
+                    "reason": {
+                        "type": "string",
+                        "description": "Textual information for the current state of the invitation.",
+                        "readOnly": true
+                    },
+                    "phase": {
+                        "$ref": "#/components/schemas/StatusPhase"
+                    }
+                },
+                "description": "Status represents the current status of invitation."
+            },
+            "platforminvitationv1Config": {
+                "type": "object",
+                "properties": {
+                    "userEmail": {
+                        "type": "string",
+                        "description": "Email address of the invited user."
+                    },
+                    "accessPolicy": {
+                        "$ref": "#/components/schemas/v1AccessPolicy"
+                    },
+                    "accountId": {
+                        "type": "string",
+                        "description": "Account UID to which the user has been invited. User can be invited to multiple accounts."
+                    },
+                    "tenantId": {
+                        "type": "string",
+                        "description": "Tenant UID to which the user has been invited. User can be invited to multiple tenants."
+                    },
+                    "projectId": {
+                        "type": "string",
+                        "description": "Project UID to which the user has been invited. User can be invited to multiple projects."
+                    }
+                },
+                "description": "Config represents the configuration of the invitation.",
+                "required": [
+                    "userEmail",
+                    "accessPolicy"
+                ]
+            },
+            "protobufAny": {
+                "type": "object",
+                "properties": {
+                    "@type": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": {}
+            },
+            "v1AcceptInvitationRequest": {
+                "type": "object",
+                "properties": {
+                    "accountId": {
+                        "type": "string",
+                        "description": "we need to pass account_id in the body as for first time acceptance of request, user would not have the context of account."
+                    }
+                },
+                "description": "AcceptInvitationRequest is the request message to accept an invitation.",
+                "required": [
+                    "accountId"
+                ]
+            },
+            "v1AcceptInvitationResponse": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "description": "Information of all the accepted invitations, can be used by UI to display count of accepted invites etc.",
+                        "readOnly": true
+                    }
+                },
+                "description": "AcceptInvitationResponse is the response for AcceptInvitation API."
+            },
+            "v1AccessPolicy": {
+                "type": "object",
+                "properties": {
+                    "globalScope": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Global scope represents the global role names."
+                    },
+                    "account": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Account represents the account role names."
+                    },
+                    "tenant": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/v1RoleBinding"
+                        },
+                        "description": "Tenant represents the tenant level role bindings and resource IDs."
+                    },
+                    "project": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/v1RoleBinding"
+                        },
+                        "description": "Project represents the project level role bindings and resource IDS."
+                    },
+                    "namespace": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/v1RoleBinding"
+                        },
+                        "description": "Namespace represents the namespace level role bindings and resource IDS."
+                    }
+                },
+                "description": "Access Policy controls access to control plane resources. With IAM, one can centrally manage permissions that control which resources users can access."
+            },
+            "v1CreateInvitationRequest": {
+                "type": "object",
+                "properties": {
+                    "invitation": {
+                        "$ref": "#/components/schemas/v1Invitation"
+                    }
+                },
+                "description": "CreateInvitationRequest is the request message for invitation."
+            },
+            "v1Invitation": {
+                "type": "object",
+                "properties": {
+                    "meta": {
+                        "$ref": "#/components/schemas/v1Meta"
+                    },
+                    "config": {
+                        "$ref": "#/components/schemas/platforminvitationv1Config"
+                    },
+                    "status": {
+                        "$ref": "#/components/schemas/invitationv1Status"
+                    }
+                },
+                "description": "Invitation."
+            },
+            "v1ListInvitationsResponse": {
+                "type": "object",
+                "properties": {
+                    "invitations": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/v1Invitation"
+                        },
+                        "description": "Invitations is the list of invitation."
+                    },
+                    "pagination": {
+                        "$ref": "#/components/schemas/v1PageBasedPaginationResponse"
+                    }
+                },
+                "description": "ListInvitationResponse is the response message for listing all invitations in an account."
+            },
+            "v1Meta": {
+                "type": "object",
+                "properties": {
+                    "uid": {
+                        "type": "string",
+                        "description": "UID of the resource of the format <resource prefix>-<uuid>."
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Name of the resource."
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Description of the resource."
+                    },
+                    "resourceVersion": {
+                        "type": "string",
+                        "description": "A string that identifies the version of this object that can be used by clients to determine when objects have changed.\nThis value must be passed unmodified back to the server by the client."
+                    },
+                    "createTime": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Creation time of the object.",
+                        "readOnly": true
+                    },
+                    "updateTime": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Update time of the object.",
+                        "readOnly": true
+                    },
+                    "labels": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        },
+                        "description": "Labels to apply to the object."
+                    },
+                    "annotations": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        },
+                        "description": "Annotations for the object."
+                    },
+                    "parentReference": {
+                        "$ref": "#/components/schemas/v1Reference"
+                    },
+                    "resourceNames": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        },
+                        "description": "Resource names holds the mapping between the resource IDs and its display name which will be consumed by the frontend.",
+                        "readOnly": true
+                    }
+                },
+                "description": "Meta holds general resource metadata."
+            },
+            "v1PageBasedPaginationRequest": {
+                "type": "object",
+                "properties": {
+                    "pageNumber": {
+                        "type": "string",
+                        "format": "int64",
+                        "description": "Page number is the page number to return based on the size."
+                    },
+                    "pageSize": {
+                        "type": "string",
+                        "format": "int64",
+                        "description": "Page size is the maximum number of records to include per page."
+                    }
+                },
+                "description": "Request parameters for page-based pagination."
+            },
+            "v1PageBasedPaginationResponse": {
+                "type": "object",
+                "properties": {
+                    "totalRecords": {
+                        "type": "string",
+                        "format": "int64",
+                        "description": "Total records without pagination available in the dataset."
+                    },
+                    "currentPage": {
+                        "type": "string",
+                        "format": "int64",
+                        "description": "Current page number for this paginated response."
+                    },
+                    "pageSize": {
+                        "type": "string",
+                        "format": "int64",
+                        "description": "Page size used for pagination."
+                    },
+                    "totalPages": {
+                        "type": "string",
+                        "format": "int64",
+                        "description": "Total pages based on the page_size provided in the request."
+                    },
+                    "nextPage": {
+                        "type": "string",
+                        "format": "int64",
+                        "description": "Next page if available in the dataset, -1 if unavailable."
+                    },
+                    "prevPage": {
+                        "type": "string",
+                        "format": "int64",
+                        "description": "Previous page if available in the dataset, -1 if unavailable."
+                    }
+                },
+                "description": "Metadata related to page based pagination for paginated API responses."
+            },
+            "v1Reference": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "description": "API group of the resource."
+                    },
+                    "version": {
+                        "type": "string",
+                        "description": "Version of the API."
+                    },
+                    "uid": {
+                        "type": "string",
+                        "description": "UID of the resource."
+                    }
+                },
+                "description": "Reference identifies the resource type, version of the uid and the resource."
+            },
+            "v1RoleBinding": {
+                "type": "object",
+                "properties": {
+                    "roleName": {
+                        "type": "string",
+                        "description": "Role name represents the role for a tenant/project/namespace."
+                    },
+                    "resourceIds": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Resource IDs represent the IDs bounded for the given role."
+                    }
+                },
+                "description": "RoleBinding represents the tenant/project/namespace level role bindings and resource IDS."
+            }
+        }
+    }
+}

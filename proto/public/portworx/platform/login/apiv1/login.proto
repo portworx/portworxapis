@@ -1,0 +1,133 @@
+// Please use the following editor setup for this file:
+// Tab size=2; Tabs as spaces; Clean up trailing whitepsace
+//
+// In vim add: au FileType proto setl sw=2 ts=2 expandtab list
+//
+// In vscode install vscode-proto3 extension and add this to your settings.json:
+//    "[proto3]": {
+//        "editor.tabSize": 2,
+//        "editor.insertSpaces": true,
+//        "editor.rulers": [80],
+//        "editor.detectIndentation": true,
+//        "files.trimTrailingWhitespace": true
+//    }
+//
+
+syntax = "proto3";
+
+package public.portworx.platform.login.v1;
+
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/portworx/portworxapis/proto/public/portworx/platform/login/apiv1;login";
+option java_multiple_files = true;
+option java_package = "com.public.portworx.platform.login.v1";
+option java_outer_classname = "LoginProto";
+
+// Login service provides APIs for interactions with the OAuth2 OIDC provider.
+service LoginService {
+  // (-- api-linter: core::0136::verb-noun=disabled
+  //     aip.dev/not-precedent: We need to do this because current name suits best. --)
+  // Login API interacts with central using provided email + password and returns
+  // an ID Token which can be used by the user for API authentication.
+  rpc Login(LoginRequest)
+    returns (LoginResponse) {
+    option(google.api.http) = {
+      post: "/core/v1/oauth:login"
+      body: "*"
+    };
+  }
+
+  // (-- api-linter: core::0127::http-template-syntax=disabled
+  //     aip.dev/not-precedent: We need to do this because current name suits best. --)
+  // RefreshToken API returns an ID Token in exchange for a valid refresh token.
+  rpc RefreshToken(RefreshTokenRequest)
+    returns (RefreshTokenResponse) {
+    option(google.api.http) = {
+      post: "/core/v1/oauth:refreshToken"
+      body: "*"
+    };
+  }
+
+  // GetOIDCInfo API returns an oidc configurations for user client.
+  // (-- api-linter: core::0131::request-message-name=disabled
+  //     aip.dev/not-precedent: We need to do this because api does not require input. --)
+  rpc GetOIDCInfo(google.protobuf.Empty)
+    returns (OIDCInfo) {
+      option(google.api.http) = {
+        get: "/core/v1/oauth:oidcInfo"
+      };
+  }
+}
+
+// Request for getting the user ID token in exchange for the given username and password.
+message LoginRequest {
+  // User email.
+  string email = 1;
+  // User password.
+  string password = 2;
+}
+
+// Response primarily returns a valid ID token in exchange for the given email and password.
+message LoginResponse {
+  // ID token containing the claims about user authentication.
+  string id_token = 1;
+  // Special token used to obtain additional access tokens.
+  string refresh_token = 2;
+  // Name/value pairs that contain user information.
+  Claims claims = 3;
+  // (-- api-linter: core::0142::time-field-names=disabled
+  //     aip.dev/not-precedent: We need to do this because current name suits best. --)
+  // Expiry time for the returned ID token.
+  google.protobuf.Timestamp expires_by = 4;
+}
+
+// Claims provides information about the claims in the token.
+message Claims {
+  // Issuer of the tokens.
+  string iss = 1;
+  // Subject is the unique identifier of the user account.
+  string sub = 2;
+  // Name of the user account.
+  string name = 3;
+  // Email of the user account.
+  string email = 4;
+  // Roles of the user account.
+  repeated string roles = 5;
+  // Groups in which this user account is part of.
+  repeated string groups = 6;
+}
+
+// Request for getting the user ID token in exchange for the given refresh token.
+message RefreshTokenRequest {
+  // Special token used to obtain additional access token.
+  string refresh_token = 1;
+}
+
+// Reponse primarily returns a valid ID token in exchange for the given refresh token.
+message RefreshTokenResponse {
+  // Access token containing the claims about user authentication.
+  string id_token = 1;
+  // Special token used to obtain additional access tokens.
+  string refresh_token = 2;
+  // Name/value pairs that contain user information.
+  Claims claims = 3;
+  // (-- api-linter: core::0142::time-field-names=disabled
+  //     aip.dev/not-precedent: We need to do this because current name suits best. --)
+  // Expiry time for the returned ID token.
+  google.protobuf.Timestamp expires_by = 4;
+}
+
+// Response returns the OIDC configuration for the clients.
+message OIDCInfo {
+  // Issuer of the ID tokens.
+  string issuer = 1;
+  // OIDC provider's authentication URL.
+  string auth_url = 2;
+  // ID of the OIDC client.
+  string client_id = 3;
+  // URL to redirect after authentication.
+  string redirect_url = 4;
+}

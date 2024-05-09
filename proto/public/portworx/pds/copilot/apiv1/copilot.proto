@@ -1,0 +1,68 @@
+// Please use the following editor setup for this file:
+// Tab size=2; Tabs as spaces; Clean up trailing whitepsace
+//
+// In vim add: au FileType proto setl sw=2 ts=2 expandtab list
+//
+// In vscode install vscode-proto3 extension and add this to your settings.json:
+//    "[proto3]": {
+//        "editor.tabSize": 2,
+//        "editor.insertSpaces": true,
+//        "editor.rulers": [80],
+//        "editor.detectIndentation": true,
+//        "files.trimTrailingWhitespace": true
+//    }
+//
+syntax = "proto3";
+
+package public.portworx.pds.copilot.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package="github.com/portworx/portworxapis/proto/public/portworx/pds/copilot/apiv1;copilot";
+option java_multiple_files = true;
+option java_package = "com.public.portworx.pds.copilot.v1";
+option java_outer_classname = "CopilotProto";
+
+// CopilotService serves copilot search api.
+service CopilotService {
+  // Search dataservice queries.
+  rpc SearchQuery(SearchQueryRequest)
+      returns(SearchQueryResponse) {
+    option(google.api.http) = {
+      post: "/pds/v1/copilot/search"
+      body: "*"
+    };
+  }
+}
+
+// Search request to query.
+message SearchQueryRequest {
+  // Id of the dataservice.
+  string data_service_id = 1;
+
+  // Query string.
+  string query = 2;
+}
+
+// Response structure contains fields for query response from copilot service.
+message SearchQueryResponse {
+  // (-- api-linter: core::0158::response-repeated-first-field=disabled
+  //     aip.dev/not-precedent: We need to do this because of the copilot response. --)
+  // (-- api-linter: core::0158::response-plural-first-field=disabled
+  //     aip.dev/not-precedent: We need to do this because of the copilot response. --)
+  // Id of the dataservice.
+  string data_service_id = 1;
+
+  // Unique id of response.
+  string id = 2;
+
+  // Query string.
+  string query = 3;
+
+  // Response string.
+  string response = 4;
+
+  // Response time.
+  google.protobuf.Timestamp response_time = 5;
+}

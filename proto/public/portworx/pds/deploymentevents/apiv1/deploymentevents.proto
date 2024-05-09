@@ -1,0 +1,113 @@
+// Please use the following editor setup for this file:
+// Tab size=2; Tabs as spaces; Clean up trailing whitepsace
+//
+// In vim add: au FileType proto setl sw=2 ts=2 expandtab list
+//
+// In vscode install vscode-proto3 extension and add this to your settings.json:
+//    "[proto3]": {
+//        "editor.tabSize": 2,
+//        "editor.insertSpaces": true,
+//        "editor.rulers": [80],
+//        "editor.detectIndentation": true,
+//        "files.trimTrailingWhitespace": true
+//    }
+//
+syntax = "proto3";
+
+package public.portworx.pds.deploymentevents.v1;
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+import "public/portworx/common/apiv1/meta.proto";
+import "public/portworx/common/apiv1/pagination.proto";
+import "public/portworx/common/apiv1/sort.proto";
+
+option go_package="github.com/portworx/portworxapis/proto/public/portworx/pds/deploymentevents/apiv1;deploymentevent";
+option java_multiple_files = true;
+option java_package = "com.public.portworx.pds.deploymentevents.v1";
+option java_outer_classname = "DeploymentEventsProto";
+
+// DeploymentEventService serve deployment events resource APIs.
+// This allows PDS users to list kubernetes events from target cluster of a deployment.
+service DeploymentEventService {
+  // ListDeploymentEvents API returns the list of kubernetes events related to a deployment.
+  rpc ListDeploymentEvents(ListDeploymentEventsRequest)
+      returns (ListDeploymentEventsResponse) {
+    option(google.api.http) = {
+      get: "/pds/v1/deployments/{deployment_id}/events"
+    };
+  }
+}
+
+// DeploymentEvent contains all the fields received from kubernetes event of a deployment.
+message DeploymentEvent {
+  // Metadata of the resource.
+  public.portworx.common.v1.Meta meta = 1;
+
+  // Status of the Event.
+  Status status = 2;
+}
+
+// Status of the event.
+message Status {
+
+  // Action involved in the event.
+  string action = 1;
+
+  // No. of times the event has been generated.
+  int64 count = 2;
+
+  // Message related to the event.
+  string message = 3;
+
+  // Reason for the event.
+  string reason = 4;
+
+  // Resource Kind.
+  string resource_kind = 5;
+
+  // Resource Name.
+  string resource_name = 6;
+
+  // Timestamp of the event.
+  google.protobuf.Timestamp timestamp_time = 7;
+
+  // Type of the event.
+  EventType type = 8;
+}
+
+// Request to list events of a deployment.
+message ListDeploymentEventsRequest {
+  // Deployment id for which events need to be listed.
+  string deployment_id = 1;
+
+  // Pagination parameters for listing events.
+  public.portworx.common.v1.PageBasedPaginationRequest pagination = 2 [(google.api.field_behavior) = OPTIONAL];
+
+  // Sorting details using which requested list of events to be sorted.
+  public.portworx.common.v1.Sort sort = 3 [(google.api.field_behavior) = OPTIONAL];
+}
+
+// Response to list the deployment events.
+message ListDeploymentEventsResponse {
+  // List of Event resources.
+  repeated DeploymentEvent deployment_events = 1;
+
+  // Pagination metadata for this response.
+  // (-- api-linter: core::0132::response-unknown-fields=disabled
+  //     aip.dev/not-precedent: We need this field for pagination. --)
+  public.portworx.common.v1.PageBasedPaginationResponse pagination = 2;
+}
+
+// EventType is type of kubernetes event.
+enum EventType {
+  // Unspecified.
+  EVENT_TYPE_UNSPECIFIED = 0;
+
+  // Normal event.
+  NORMAL = 1;
+
+  // Warning event.
+  WARNING = 2;
+}

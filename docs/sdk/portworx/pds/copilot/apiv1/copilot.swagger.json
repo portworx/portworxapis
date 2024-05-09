@@ -1,0 +1,128 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "public/portworx/pds/copilot/apiv1/copilot.proto",
+        "version": "version not set"
+    },
+    "tags": [
+        {
+            "name": "CopilotService"
+        }
+    ],
+    "paths": {
+        "/pds/v1/copilot/search": {
+            "post": {
+                "summary": "Search dataservice queries.",
+                "operationId": "CopilotService_SearchQuery",
+                "responses": {
+                    "200": {
+                        "description": "A successful response.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/v1SearchQueryResponse"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "An unexpected error response.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/rpcStatus"
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/v1SearchQueryRequest"
+                            }
+                        }
+                    },
+                    "description": "Search request to query.",
+                    "required": true
+                },
+                "tags": [
+                    "CopilotService"
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "protobufAny": {
+                "type": "object",
+                "properties": {
+                    "@type": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": {}
+            },
+            "rpcStatus": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "details": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/protobufAny"
+                        }
+                    }
+                }
+            },
+            "v1SearchQueryRequest": {
+                "type": "object",
+                "properties": {
+                    "dataServiceId": {
+                        "type": "string",
+                        "description": "Id of the dataservice."
+                    },
+                    "query": {
+                        "type": "string",
+                        "description": "Query string."
+                    }
+                },
+                "description": "Search request to query."
+            },
+            "v1SearchQueryResponse": {
+                "type": "object",
+                "properties": {
+                    "dataServiceId": {
+                        "type": "string",
+                        "description": "\nId of the dataservice."
+                    },
+                    "id": {
+                        "type": "string",
+                        "description": "Unique id of response."
+                    },
+                    "query": {
+                        "type": "string",
+                        "description": "Query string."
+                    },
+                    "response": {
+                        "type": "string",
+                        "description": "Response string."
+                    },
+                    "responseTime": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Response time."
+                    }
+                },
+                "description": "Response structure contains fields for query response from copilot service."
+            }
+        }
+    }
+}

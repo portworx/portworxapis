@@ -1,0 +1,286 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "public/portworx/platform/login/apiv1/login.proto",
+        "version": "version not set"
+    },
+    "tags": [
+        {
+            "name": "LoginService"
+        }
+    ],
+    "paths": {
+        "/core/v1/oauth:login": {
+            "post": {
+                "summary": "Login API interacts with central using provided email + password and returns\nan ID Token which can be used by the user for API authentication.",
+                "operationId": "LoginService_Login",
+                "responses": {
+                    "200": {
+                        "description": "A successful response.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/v1LoginResponse"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "An unexpected error response.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/rpcStatus"
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/v1LoginRequest"
+                            }
+                        }
+                    },
+                    "description": "Request for getting the user ID token in exchange for the given username and password.",
+                    "required": true
+                },
+                "tags": [
+                    "LoginService"
+                ]
+            }
+        },
+        "/core/v1/oauth:oidcInfo": {
+            "get": {
+                "summary": "GetOIDCInfo API returns an oidc configurations for user client.",
+                "operationId": "LoginService_GetOIDCInfo",
+                "responses": {
+                    "200": {
+                        "description": "A successful response.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/v1OIDCInfo"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "An unexpected error response.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/rpcStatus"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "LoginService"
+                ]
+            }
+        },
+        "/core/v1/oauth:refreshToken": {
+            "post": {
+                "summary": "RefreshToken API returns an ID Token in exchange for a valid refresh token.",
+                "operationId": "LoginService_RefreshToken",
+                "responses": {
+                    "200": {
+                        "description": "A successful response.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/v1RefreshTokenResponse"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "An unexpected error response.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/rpcStatus"
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/v1RefreshTokenRequest"
+                            }
+                        }
+                    },
+                    "description": "Request for getting the user ID token in exchange for the given refresh token.",
+                    "required": true
+                },
+                "tags": [
+                    "LoginService"
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "protobufAny": {
+                "type": "object",
+                "properties": {
+                    "@type": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": {}
+            },
+            "rpcStatus": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "details": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/protobufAny"
+                        }
+                    }
+                }
+            },
+            "v1Claims": {
+                "type": "object",
+                "properties": {
+                    "iss": {
+                        "type": "string",
+                        "description": "Issuer of the tokens."
+                    },
+                    "sub": {
+                        "type": "string",
+                        "description": "Subject is the unique identifier of the user account."
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Name of the user account."
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "Email of the user account."
+                    },
+                    "roles": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Roles of the user account."
+                    },
+                    "groups": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Groups in which this user account is part of."
+                    }
+                },
+                "description": "Claims provides information about the claims in the token."
+            },
+            "v1LoginRequest": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "description": "User email."
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "User password."
+                    }
+                },
+                "description": "Request for getting the user ID token in exchange for the given username and password."
+            },
+            "v1LoginResponse": {
+                "type": "object",
+                "properties": {
+                    "idToken": {
+                        "type": "string",
+                        "description": "ID token containing the claims about user authentication."
+                    },
+                    "refreshToken": {
+                        "type": "string",
+                        "description": "Special token used to obtain additional access tokens."
+                    },
+                    "claims": {
+                        "$ref": "#/components/schemas/v1Claims"
+                    },
+                    "expiresBy": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "\nExpiry time for the returned ID token."
+                    }
+                },
+                "description": "Response primarily returns a valid ID token in exchange for the given email and password."
+            },
+            "v1OIDCInfo": {
+                "type": "object",
+                "properties": {
+                    "issuer": {
+                        "type": "string",
+                        "description": "Issuer of the ID tokens."
+                    },
+                    "authUrl": {
+                        "type": "string",
+                        "description": "OIDC provider's authentication URL."
+                    },
+                    "clientId": {
+                        "type": "string",
+                        "description": "ID of the OIDC client."
+                    },
+                    "redirectUrl": {
+                        "type": "string",
+                        "description": "URL to redirect after authentication."
+                    }
+                },
+                "description": "Response returns the OIDC configuration for the clients."
+            },
+            "v1RefreshTokenRequest": {
+                "type": "object",
+                "properties": {
+                    "refreshToken": {
+                        "type": "string",
+                        "description": "Special token used to obtain additional access token."
+                    }
+                },
+                "description": "Request for getting the user ID token in exchange for the given refresh token."
+            },
+            "v1RefreshTokenResponse": {
+                "type": "object",
+                "properties": {
+                    "idToken": {
+                        "type": "string",
+                        "description": "Access token containing the claims about user authentication."
+                    },
+                    "refreshToken": {
+                        "type": "string",
+                        "description": "Special token used to obtain additional access tokens."
+                    },
+                    "claims": {
+                        "$ref": "#/components/schemas/v1Claims"
+                    },
+                    "expiresBy": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "\nExpiry time for the returned ID token."
+                    }
+                },
+                "description": "Reponse primarily returns a valid ID token in exchange for the given refresh token."
+            }
+        }
+    }
+}

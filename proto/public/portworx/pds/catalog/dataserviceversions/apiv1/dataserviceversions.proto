@@ -1,0 +1,150 @@
+// Please use the following editor setup for this file:
+// Tab size=2; Tabs as spaces; Clean up trailing whitepsace
+//
+// In vim add: au FileType proto setl sw=2 ts=2 expandtab list
+//
+// In vscode install vscode-proto3 extension and add this to your settings.json:
+//    "[proto3]": {
+//        "editor.tabSize": 2,
+//        "editor.insertSpaces": true,
+//        "editor.rulers": [80],
+//        "editor.detectIndentation": true,
+//        "files.trimTrailingWhitespace": true
+//    }
+//
+syntax = "proto3";
+
+package public.portworx.pds.dataserviceversions.v1;
+
+import "public/portworx/common/apiv1/meta.proto";
+import "public/portworx/common/apiv1/pagination.proto";
+import "google/api/annotations.proto";
+import "google/api/field_info.proto";
+import "public/portworx/common/apiv1/sort.proto";
+import "google/api/field_behavior.proto";
+
+option go_package = "github.com/portworx/portworxapis/proto/public/portworx/pds/catalog/dataserviceversions/apiv1;dataserviceversions";
+option java_multiple_files = true;
+option java_package = "com.public.portworx.pds.dataserviceversions.v1";
+option java_outer_classname = "DataServiceVersionsProto";
+
+// DataServiceVersionService serves different versions of data services.
+service DataServiceVersionService {
+  // ListDataServiceVersions lists all the versions of a data service.
+  rpc ListDataServiceVersions(ListDataServiceVersionsRequest) 
+    returns (ListDataServiceVersionsResponse) {
+    option(google.api.http) = {
+      get: "/pds/v1/catalog/dataServices/{data_service_id}/dataServiceVersions"
+    };
+  }
+
+  // GetDataServiceVersion returns a data service version.
+  rpc GetDataServiceVersion(GetDataServiceVersionRequest) 
+    returns (DataServiceVersion) {
+    option(google.api.http) = {
+      get: "/pds/v1/catalog/dataServiceVersions/{id}"
+    };
+  }
+
+  // ListCompatibleDataServiceVersions lists all the data service versions compatible with other version of a data service.
+  rpc ListCompatibleDataServiceVersions(ListCompatibleDataServiceVersionsRequest) 
+    returns (ListCompatibleDataServiceVersionsResponse) {
+    option(google.api.http) = {
+      get: "/pds/v1/catalog/dataServiceVersions:listCompatibleVersions"
+    };
+  }
+}
+
+// ListVersionsRequest is the request object for ListVersions.
+message ListDataServiceVersionsRequest {
+  // UID of the data service.
+  string data_service_id = 1;
+  // Enabled indicate either list all, enabled only or disabled only versions.
+  enum Enabled {
+    // List all versions.
+    ENABLED_UNSPECIFIED = 0;
+    // List only enabled versions.
+    TRUE = 1;
+    // List only disabled versions.
+    FALSE = 2;
+  }
+  // Filter data service versions based on enabled flag.
+  Enabled enabled = 2 [(google.api.field_behavior) = OPTIONAL];
+  // Sorting details using which requested list of Versions to be sorted.
+  public.portworx.common.v1.Sort sort = 3;
+  // Pagination parameters for listing versions.
+  public.portworx.common.v1.PageBasedPaginationRequest pagination = 4 [(google.api.field_behavior) = OPTIONAL];
+}
+
+// ListDataServiceVersionsResponse is the response object for ListVersions.
+message ListDataServiceVersionsResponse {
+  // List of versions of the data service.
+  repeated DataServiceVersion data_service_versions = 1;
+  // Pagination metadata for this response.
+  // (-- api-linter: core::0132::response-unknown-fields=disabled
+  //     aip.dev/not-precedent: We need this field for pagination. --)
+  public.portworx.common.v1.PageBasedPaginationResponse pagination = 2;
+}
+
+// GetDataServiceVersionRequest is the request object for GetVersion.
+message GetDataServiceVersionRequest {
+  // UID of the version.
+  string id = 1;
+} 
+
+// ListCompatibleDataServiceVersionsRequest is the request for ListCompatibleVersions.
+message ListCompatibleDataServiceVersionsRequest {
+  // List of UID of the data service for which compatible data service versions are requested.
+  repeated string data_service_ids = 1 [(google.api.field_behavior) = OPTIONAL];
+  // List of UID of the data service version for which compatible versions are requested.
+  repeated string data_service_version_ids = 2 [(google.api.field_behavior) = OPTIONAL];
+  // Sorting details using which requested list of data service versions to be sorted.
+  public.portworx.common.v1.Sort sort = 3;
+  // Pagination parameters for listing compatible data service versions.
+  public.portworx.common.v1.PageBasedPaginationRequest pagination = 4 [(google.api.field_behavior) = OPTIONAL];
+}
+
+// ListCompatibleDataServiceVersionsResponse is the response for ListCompatibleDataServiceVersions.
+message ListCompatibleDataServiceVersionsResponse {
+  // List of compatible versions of the data service.
+  repeated CompatibleVersions compatible_data_service_versions = 1;
+  // Pagination metadata for this response.
+  // (-- api-linter: core::0132::response-unknown-fields=disabled
+  //     aip.dev/not-precedent: We need this field for pagination. --)
+  public.portworx.common.v1.PageBasedPaginationResponse pagination = 3;
+}
+
+// Version represents a particular version of a data service.
+message DataServiceVersion {
+  // Metadata of the resource.
+  portworx.common.v1.Meta meta = 1;
+  // Information related to the version.
+  Info info = 2;
+}
+
+// Information related to the data service version.
+message Info {
+  // Enabled indicates if the version is enabled.
+  bool enabled = 1;
+
+  // revision ID of the data service version
+  string revision_id = 2 [(google.api.field_info).format = UUID4];
+}
+
+// CompatibleVersions contains compatibility information for a particular Version.
+message CompatibleVersions {
+  // UID of the data service.
+  string data_service_id = 1;
+  // Name of the data service.
+  string data_service_name = 2;
+  // UID of the data service version.
+  string data_service_version_id = 3;
+  // Name of the data service version.
+  string data_service_version_name = 4;
+  // LatestCompatiblePatch contains the highest compatible version that only increases the patch version.
+  DataServiceVersion latest_compatible_patch = 5;
+  // LatestCompatibleVersions contains the latest patch versions of compatible major/minor versions.
+  repeated DataServiceVersion latest_compatible_versions = 6;
+  // CompatibleVersions contains all compatible versions.
+  repeated DataServiceVersion compatible_versions = 7;
+}

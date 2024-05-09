@@ -1,0 +1,120 @@
+// Please use the following editor setup for this file:
+// Tab size=2; Tabs as spaces; Clean up trailing whitepsace
+//
+// In vim add: au FileType proto setl sw=2 ts=2 expandtab list
+//
+// In vscode install vscode-proto3 extension and add this to your settings.json:
+//    "[proto3]": {
+//        "editor.tabSize": 2,
+//        "editor.insertSpaces": true,
+//        "editor.rulers": [80],
+//        "editor.detectIndentation": true,
+//        "files.trimTrailingWhitespace": true
+//    }
+//
+
+syntax = "proto3";
+
+package public.portworx.pds.catalog.dataservices.v1;
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "public/portworx/common/apiv1/meta.proto";
+import "public/portworx/common/apiv1/pagination.proto";
+import "public/portworx/common/apiv1/sort.proto";
+
+option go_package = "github.com/portworx/portworxapis/proto/public/portworx/pds/catalog/dataservices/apiv1;dataservices";
+option java_multiple_files = true;
+option java_package = "com.public.portworx.pds.catalog.dataservices.v1";
+option java_outer_classname = "DataServicesProto";
+
+// DataServicesService serves the catalog information about the supported data services.
+service DataServicesService {
+  // GetDataService API returns the the data service resource.
+  rpc GetDataService(GetDataServiceRequest)
+    returns (DataService) {
+    option(google.api.http) = {
+      get: "/pds/v1/catalog/dataServices/{id}"
+    };
+  }
+
+  // ListDataServices API lists the the data service resources.
+  rpc ListDataServices(ListDataServicesRequest)
+    returns (ListDataServicesResponse) {
+    option(google.api.http) = {
+      get: "/pds/v1/catalog/dataServices"
+    };
+  }
+}
+
+// Request to get the data service resource.
+message GetDataServiceRequest {
+  // UID of the Data Service.
+  string id = 1;
+}
+
+// Request to list the data service resources.
+message ListDataServicesRequest {
+   // Enabled indicate list either all, enabled only or disabled only data services.
+   enum Enabled {
+    // List all data services.
+    ENABLED_UNSPECIFIED = 0;
+    // List only enabled data services.
+    TRUE = 1;
+    // List only disabled data services.
+    FALSE = 2;
+  }
+  // Filter data services based on enabled flag.
+  Enabled enabled = 1 [(google.api.field_behavior) = OPTIONAL];
+
+  // Sorting details using which requested list of data services are to be sorted.
+  public.portworx.common.v1.Sort sort = 2;
+
+  // Pagination parameters for listing data services.
+  public.portworx.common.v1.PageBasedPaginationRequest pagination = 3 [(google.api.field_behavior) = OPTIONAL];
+}
+
+// Response for listing data service.
+message ListDataServicesResponse {
+  // List of data service resources.
+  repeated DataService data_services = 1;
+
+  // (-- api-linter: core::0132::response-unknown-fields=disabled
+  //     aip.dev/not-precedent: We need this field for pagination. --)
+  // Pagination metadata for this response.
+  public.portworx.common.v1.PageBasedPaginationResponse pagination = 2;
+}
+
+// A data service is a independent, loosely coupled function that calculate information collected and saved in data storage volumes.
+message DataService {
+  // Metadata of the data service.
+  public.portworx.common.v1.Meta meta = 1 [(google.api.field_behavior) = OUTPUT_ONLY];
+
+  // Desired info of the data service.
+  Info info = 2 [(google.api.field_behavior) = OUTPUT_ONLY];
+}
+
+// Desired Info of the data service.
+message Info {
+  // Short name of the data service.
+  string short_name = 1;
+
+  // Enabled flag suggests if the data service is enabled or not.
+  bool enabled = 2;
+
+  // Node restrictions.
+  NodeRestrictions node_restrictions = 3;
+}
+
+// Node Restrictions defines the number of replicas of data service on which the restrictions are imposed.
+// Eg: allowed_sizes = [1,2,4,6]; downsize_enabled = true;  resize_disabled_sizes = [2].
+message NodeRestrictions {
+  // List of all allowed node sizes.
+  repeated int64 allowed_sizes = 1;
+
+  // Flag to determine whether downsizing the cluster is enabled during editing.
+  bool downsize_enabled = 2;
+
+  // List of all node sizes that are not allowed to change during editing.
+  repeated int64 resize_disabled_sizes = 3;
+}

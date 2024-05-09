@@ -1,0 +1,195 @@
+// Please use the following editor setup for this file:
+// Tab size=2; Tabs as spaces; Clean up trailing whitepsace
+//
+// In vim add: au FileType proto setl sw=2 ts=2 expandtab list
+//
+// In vscode install vscode-proto3 extension and add this to your settings.json:
+//    "[proto3]": {
+//        "editor.tabSize": 2,
+//        "editor.insertSpaces": true,
+//        "editor.rulers": [80],
+//        "editor.detectIndentation": true,
+//        "files.trimTrailingWhitespace": true
+//    }
+//
+
+syntax = "proto3";
+
+package public.portworx.platform.invitation.v1;
+
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/api/field_behavior.proto";
+import "google/api/field_info.proto";
+
+import "public/portworx/common/apiv1/meta.proto";
+import "public/portworx/common/apiv1/pagination.proto";
+import "public/portworx/platform/iam/apiv1/iam.proto";
+
+option go_package = "github.com/portworx/portworxapis/proto/public/portworx/platform/invitation/apiv1;invitation";
+option java_multiple_files = true;
+option java_outer_classname = "InvitationProto";
+option java_package = "com.public.portworx.platform.invitation.v1";
+
+
+
+// Account Invitation Service provides APIs to invite new users to account.
+service InvitationService {
+  // CreateInvitation API creates an invitation.
+  rpc CreateInvitation (CreateInvitationRequest)
+    returns (Invitation){
+      option(google.api.http) = {
+        post: "/core/v1/invite"
+        body: "*"
+      };
+  }
+
+  // ListInvitation API lists invitation in an account/tenant/project.
+  rpc ListInvitations (ListInvitationsRequest)
+    returns (ListInvitationsResponse){
+      option(google.api.http) = {
+        get: "/core/v1/invite"
+      };
+  }
+
+  // DeleteInvitation deletes the specified invitation from the system.
+  rpc DeleteInvitation (DeleteInvitationRequest)
+    returns (google.protobuf.Empty){
+      option(google.api.http) = {
+        delete: "/core/v1/invite/{uid}"
+      };
+  }
+
+  // GetInvitation deletes the specified invitation from the system.
+  rpc GetInvitation (GetInvitationRequest)
+    returns (Invitation){
+      option(google.api.http) = {
+        get: "/core/v1/invite/{uid}"
+      };
+  }
+
+  // AcceptInvitation API accepts the invitation from the system.
+  rpc AcceptInvitation (AcceptInvitationRequest)
+    returns (AcceptInvitationResponse){
+      option(google.api.http) = {
+        post: "/core/v1/invite:accept"
+        body: "*"
+      };
+    }
+}
+
+
+// Invitation.
+message Invitation {
+  // Metadata of the invitation.
+  public.portworx.common.v1.Meta meta = 1;
+  // Configuration of the invitation.
+  Config config = 2;
+  // Status information of the invitation.
+  Status status = 3 [(google.api.field_behavior) = OUTPUT_ONLY];
+
+}
+
+// Status represents the current status of invitation.
+message Status {
+  // Textual information for the current state of the invitation.
+  string reason = 1 [(google.api.field_behavior) = OUTPUT_ONLY];
+  // Current state of the invitation.
+  Phase phase = 2 [(google.api.field_behavior) = OUTPUT_ONLY];
+
+  // Phase represents the current state of the invitation.
+  // This will be useful later, when we support resend, expire flows. Currently only pending will be supported.
+  enum Phase{
+    // Invitation status unspecified.
+    PHASE_UNSPECIFIED = 0;
+    // Invitation acceptance pending.
+    PENDING = 1;
+    // Invitation Accepted.
+    ACCEPTED = 2;
+  }
+}
+
+// Config represents the configuration of the invitation.
+message Config {
+  // Email address of the invited user.
+  string user_email = 1 [(google.api.field_behavior) = REQUIRED];
+
+  // Access policy defines access to control plane resources.
+  public.portworx.platform.iam.v1.AccessPolicy access_policy = 2 [(google.api.field_behavior) = REQUIRED];
+
+  // Resource ID for which invitation has been sent.
+  oneof resource_id {
+    // Account UID to which the user has been invited. User can be invited to multiple accounts.
+    string account_id = 101 ;
+
+    // Tenant UID to which the user has been invited. User can be invited to multiple tenants.
+    string tenant_id = 102 ;
+
+    // Project UID to which the user has been invited. User can be invited to multiple projects.
+    string project_id = 103 ;
+  }
+
+}
+
+// InvitationGetRequest is the request message to get invitation details.
+message GetInvitationRequest{
+  // UID of the invitation.
+  string uid = 1 [(google.api.field_info).format = UUID4];
+}
+
+
+// CreateInvitationRequest is the request message for invitation.
+message CreateInvitationRequest {
+  //Invitation is of type invitation.
+  Invitation invitation = 1;
+}
+
+// ListInvitationRequest is the request message for listing all invitations in an account.
+message ListInvitationsRequest {
+  // Resource ID for which invitation has been sent.
+  oneof resource_id {
+    // Account UID to which the user has been invited. User can be invited to multiple accounts.
+    string account_id = 101 ;
+
+    // Tenant UID to which the user has been invited. User can be invited to multiple tenants.
+    string tenant_id = 102 ;
+
+    // Project UID to which the user has been invited. User can be invited to multiple projects.
+    string project_id = 103 ;
+  }
+
+  // Pagination parameters for listing invitations.
+  public.portworx.common.v1.PageBasedPaginationRequest pagination = 104;
+}
+
+// ListInvitationResponse is the response message for listing all invitations in an account.
+message ListInvitationsResponse {
+  // Invitations is the list of invitation.
+  repeated Invitation invitations = 1;
+
+  // Pagination metadata for this response.
+  // (-- api-linter: core::0132::response-unknown-fields=disabled
+  //     aip.dev/not-precedent: We need this field for pagination. --)
+  public.portworx.common.v1.PageBasedPaginationResponse pagination = 2;
+}
+
+// DeleteInvitationRequest is the request message for deleting an invitation.
+message DeleteInvitationRequest {
+  // UID is the unique ID of the invitation.
+  string uid = 1 [(google.api.field_info).format = UUID4];
+}
+
+// AcceptInvitationRequest is the request message to accept an invitation.
+message AcceptInvitationRequest {
+  // we need to pass account_id in the body as for first time acceptance of request, user would not have the context of account.
+  string account_id = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+//AcceptInvitationResponse is the response for AcceptInvitation API.
+message AcceptInvitationResponse {
+  // Information of all the accepted invitations, can be used by UI to display count of accepted invites etc.
+  string message = 1 [(google.api.field_behavior) = OUTPUT_ONLY];
+}
+
+
