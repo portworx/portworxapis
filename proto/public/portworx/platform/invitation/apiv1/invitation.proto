@@ -77,6 +77,14 @@ service InvitationService {
         body: "*"
       };
     }
+
+  // Notify re-send the mail notification to the user email in the invitation config.
+  rpc NotifyUser (NotifyUserRequest)
+      returns (google.protobuf.Empty){
+    option(google.api.http) = {
+      get: "/core/v1/invite/{uid}:notify"
+    };
+  }
 }
 
 
@@ -134,6 +142,12 @@ message Config {
 
 // InvitationGetRequest is the request message to get invitation details.
 message GetInvitationRequest{
+  // UID of the invitation.
+  string uid = 1 [(google.api.field_info).format = UUID4];
+}
+
+// NotifyRequest is the request message to notify user email in the invitation config.
+message NotifyUserRequest{
   // UID of the invitation.
   string uid = 1 [(google.api.field_info).format = UUID4];
 }

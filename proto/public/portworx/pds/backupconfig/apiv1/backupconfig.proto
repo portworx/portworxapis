@@ -39,7 +39,7 @@ service BackupConfigService {
     };
   }
 
-  // ListBackupConfigs API lists all the backup configuration for a deployment.
+  // ListBackupConfigs API lists all the backup configuration for a data service deployment.
   rpc ListBackupConfigs(ListBackupConfigsRequest)
     returns (ListBackupConfigsResponse) {
     option(google.api.http) = {
@@ -96,8 +96,8 @@ message ListBackupConfigsRequest {
     // Namespace ID for which the backup configurations will be listed.
     string namespace_id = 4;
 
-    // Deployment ID for which the backup configurations will be listed.
-    string deployment_id = 5;
+    // Data service Deployment ID for which the backup configurations will be listed.
+    string data_service_deployment_id = 5;
   }
 
   // Pagination metadata for listing backup configuration.
@@ -138,8 +138,8 @@ message CreateBackupConfigRequest {
   // (-- api-linter: core::0133::request-required-fields=disabled
   //     aip.dev/not-precedent: We really need this field to be required
   //     to support creation of the resource in the deployment context.. --)
-  // Deployment id associated with the backup configuration.
-  string deployment_id = 2 [(google.api.field_behavior) = REQUIRED];
+  // Data service Deployment id associated with the backup configuration.
+  string data_service_deployment_id = 2 [(google.api.field_behavior) = REQUIRED];
 
   // Backup configuration for the backup.
   BackupConfig backup_config = 3 [(google.api.field_behavior) = REQUIRED];
@@ -242,8 +242,8 @@ message Config {
 
 // References to the associated resources for backup configuration.
 message References {
-  // UID of the deployment to which the backup configuration belong.
-  string deployment_id = 1 [(google.api.field_behavior) = REQUIRED];
+  // UID of the data service deployment to which the backup configuration belong.
+  string data_service_deployment_id = 1 [(google.api.field_behavior) = OUTPUT_ONLY];
 
   // UID of the backup target to which the backup configuration belong.
   string backup_location_id = 2 [(google.api.field_behavior) = REQUIRED];
@@ -272,8 +272,8 @@ message Status {
   // Flag to check if the backup policy is synchronized or not.
   bool is_backup_policy_synchronized = 3;
 
-  // Deployment Meta Data.
-  DeploymentMetaData deployment_meta_data = 4;
+  // DataService Deployment Meta Data.
+  DataServiceDeploymentMetaData data_service_deployment_meta_data = 4;
 
   // Error code.
   string error_code = 5;
@@ -282,16 +282,16 @@ message Status {
   string error_message = 6;
 }
 
-// Deployment Meta Data contains the details of the deployment associated with the backup configuration.
-message DeploymentMetaData {
-  // Name of the deployment.
+// DataServiceDeployment Meta Data contains the details of the DataService deployment associated with the backup configuration.
+message DataServiceDeploymentMetaData {
+  // Name of the DataService deployment.
   string name = 1;
 
   // Custom Resource Name is the kubernetes resource name for the deployment meta data.
   string custom_resource_name = 2 [(google.api.field_behavior) = OUTPUT_ONLY];
 
-  // Deployment Target Name associated with the backup configuration.
-  string deployment_target_name = 3;
+  // Target cluster Name associated with the backup configuration.
+  string target_cluster_name = 3;
 
   // Namespace name to which the backup configuration is associated.
   string namespace_name = 4;

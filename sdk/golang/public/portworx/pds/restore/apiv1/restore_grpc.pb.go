@@ -26,7 +26,6 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -35,11 +34,10 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	RestoreService_CreateRestore_FullMethodName          = "/public.portworx.pds.restore.v1.RestoreService/CreateRestore"
-	RestoreService_GetRestore_FullMethodName             = "/public.portworx.pds.restore.v1.RestoreService/GetRestore"
-	RestoreService_ListRestores_FullMethodName           = "/public.portworx.pds.restore.v1.RestoreService/ListRestores"
-	RestoreService_RecreateRestore_FullMethodName        = "/public.portworx.pds.restore.v1.RestoreService/RecreateRestore"
-	RestoreService_GetRestorabilityMatrix_FullMethodName = "/public.portworx.pds.restore.v1.RestoreService/GetRestorabilityMatrix"
+	RestoreService_CreateRestore_FullMethodName   = "/public.portworx.pds.restore.v1.RestoreService/CreateRestore"
+	RestoreService_GetRestore_FullMethodName      = "/public.portworx.pds.restore.v1.RestoreService/GetRestore"
+	RestoreService_ListRestores_FullMethodName    = "/public.portworx.pds.restore.v1.RestoreService/ListRestores"
+	RestoreService_RecreateRestore_FullMethodName = "/public.portworx.pds.restore.v1.RestoreService/RecreateRestore"
 )
 
 // RestoreServiceClient is the client API for RestoreService service.
@@ -54,11 +52,6 @@ type RestoreServiceClient interface {
 	ListRestores(ctx context.Context, in *ListRestoresRequest, opts ...grpc.CallOption) (*ListRestoresResponse, error)
 	// RecreateRestore API recreates a already failed restore.
 	RecreateRestore(ctx context.Context, in *RecreateRestoreRequest, opts ...grpc.CallOption) (*Restore, error)
-	// GetRestorabilityMatrix API returns the compatibility matrix for restore.
-	// (-- api-linter: core::0131::request-message-name=disabled
-	//
-	//	aip.dev/not-precedent: We need to do this because we don't need any parameter in request --)
-	GetRestorabilityMatrix(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*RestorabilityMatrix, error)
 }
 
 type restoreServiceClient struct {
@@ -105,15 +98,6 @@ func (c *restoreServiceClient) RecreateRestore(ctx context.Context, in *Recreate
 	return out, nil
 }
 
-func (c *restoreServiceClient) GetRestorabilityMatrix(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*RestorabilityMatrix, error) {
-	out := new(RestorabilityMatrix)
-	err := c.cc.Invoke(ctx, RestoreService_GetRestorabilityMatrix_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // RestoreServiceServer is the server API for RestoreService service.
 // All implementations must embed UnimplementedRestoreServiceServer
 // for forward compatibility
@@ -126,11 +110,6 @@ type RestoreServiceServer interface {
 	ListRestores(context.Context, *ListRestoresRequest) (*ListRestoresResponse, error)
 	// RecreateRestore API recreates a already failed restore.
 	RecreateRestore(context.Context, *RecreateRestoreRequest) (*Restore, error)
-	// GetRestorabilityMatrix API returns the compatibility matrix for restore.
-	// (-- api-linter: core::0131::request-message-name=disabled
-	//
-	//	aip.dev/not-precedent: We need to do this because we don't need any parameter in request --)
-	GetRestorabilityMatrix(context.Context, *emptypb.Empty) (*RestorabilityMatrix, error)
 	mustEmbedUnimplementedRestoreServiceServer()
 }
 
@@ -149,9 +128,6 @@ func (UnimplementedRestoreServiceServer) ListRestores(context.Context, *ListRest
 }
 func (UnimplementedRestoreServiceServer) RecreateRestore(context.Context, *RecreateRestoreRequest) (*Restore, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RecreateRestore not implemented")
-}
-func (UnimplementedRestoreServiceServer) GetRestorabilityMatrix(context.Context, *emptypb.Empty) (*RestorabilityMatrix, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetRestorabilityMatrix not implemented")
 }
 func (UnimplementedRestoreServiceServer) mustEmbedUnimplementedRestoreServiceServer() {}
 
@@ -238,24 +214,6 @@ func _RestoreService_RecreateRestore_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
-func _RestoreService_GetRestorabilityMatrix_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RestoreServiceServer).GetRestorabilityMatrix(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: RestoreService_GetRestorabilityMatrix_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RestoreServiceServer).GetRestorabilityMatrix(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // RestoreService_ServiceDesc is the grpc.ServiceDesc for RestoreService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -278,10 +236,6 @@ var RestoreService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RecreateRestore",
 			Handler:    _RestoreService_RecreateRestore_Handler,
-		},
-		{
-			MethodName: "GetRestorabilityMatrix",
-			Handler:    _RestoreService_GetRestorabilityMatrix_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

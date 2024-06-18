@@ -98,7 +98,7 @@ message Status {
   // Completion time of the backup.
   google.protobuf.Timestamp completion_time =3;
 
-  // Enum for Phase of the Deployment.
+  // Enum for Phase of the DataService Deployment.
   enum Phase {
     // Phase is unspecified.
     PHASE_UNSPECIFIED = 0;
@@ -125,20 +125,20 @@ message Status {
   // FileSize of the CloudSnap image.
   int64 file_size  = 7;
 
-  // Deployment Meta Data.
-  DeploymentMetaData deployment_meta_data = 8;
+  // DataService Deployment Meta Data.
+  DataServiceDeploymentMetaData data_service_deployment_meta_data = 8;
 }
 
-// Deployment Meta Data contains the details of the deployment associated with the backup.
-message DeploymentMetaData {
-  // Name of the deployment.
+// DataService Deployment Meta Data contains the details of the deployment associated with the backup.
+message DataServiceDeploymentMetaData {
+  // Name of the data service deployment.
   string name = 1;
 
   // Custom Resource Name is the kubernetes resource name for the deployment meta data.
   string custom_resource_name = 2;
 
-  // Deployment Target Name associated with the backup.
-  string deployment_target_name = 3;
+  // Target cluster Name associated with the backup.
+  string target_cluster_name = 3;
 
   // Namespace name to which the backup is associated.
   string namespace_name = 4;
@@ -146,7 +146,7 @@ message DeploymentMetaData {
   // Flag to check whether Transport Layer Security support is enabled or not.
   bool tls_enabled = 5;
 
-  // Name of the data service of deployment.
+  // Name of the data service of data service deployment.
   string data_service_name = 6;
 
   // Name of the version of data service.
@@ -175,8 +175,8 @@ message DeleteBackupRequest {
 message ListBackupsRequest {
   // Specifies a filter to list the Backups.
   oneof list_by {
-    // Deployment ID for which the backups will be listed.
-    string deployment_id = 1;
+    // Data service Deployment ID for which the backups will be listed.
+    string data_service_deployment_id = 1;
 
     // Backup Configuration ID for which the backups will be listed.
     string backup_config_id = 2;
@@ -199,4 +199,3 @@ message ListBackupsResponse {
   //     aip.dev/not-precedent: We need this field for pagination. --)
   public.portworx.common.v1.PageBasedPaginationResponse pagination = 2;
 }
-

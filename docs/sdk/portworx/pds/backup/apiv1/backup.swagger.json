@@ -38,8 +38,8 @@
                 },
                 "parameters": [
                     {
-                        "name": "deploymentId",
-                        "description": "Deployment ID for which the backups will be listed.",
+                        "name": "dataServiceDeploymentId",
+                        "description": "Data service Deployment ID for which the backups will be listed.",
                         "in": "query",
                         "required": false,
                         "schema": {
@@ -239,7 +239,7 @@
                     "FAILED"
                 ],
                 "default": "PHASE_UNSPECIFIED",
-                "description": "Enum for Phase of the Deployment.\n\n - PHASE_UNSPECIFIED: Phase is unspecified.\n - IN_PROGRESS: Backup is in_progress.\n - COMPLETED: Backup is completed.\n - FAILED: Backup is failed."
+                "description": "Enum for Phase of the DataService Deployment.\n\n - PHASE_UNSPECIFIED: Phase is unspecified.\n - IN_PROGRESS: Backup is in_progress.\n - COMPLETED: Backup is completed.\n - FAILED: Backup is failed."
             },
             "backupv1Status": {
                 "type": "object",
@@ -274,8 +274,8 @@
                         "format": "int64",
                         "description": "FileSize of the CloudSnap image."
                     },
-                    "deploymentMetaData": {
-                        "$ref": "#/components/schemas/v1DeploymentMetaData"
+                    "dataServiceDeploymentMetaData": {
+                        "$ref": "#/components/schemas/v1DataServiceDeploymentMetaData"
                     }
                 },
                 "description": "Status of the Backup."
@@ -335,20 +335,20 @@
                 },
                 "description": "Desired configuration of the Backup."
             },
-            "v1DeploymentMetaData": {
+            "v1DataServiceDeploymentMetaData": {
                 "type": "object",
                 "properties": {
                     "name": {
                         "type": "string",
-                        "description": "Name of the deployment."
+                        "description": "Name of the data service deployment."
                     },
                     "customResourceName": {
                         "type": "string",
                         "description": "Custom Resource Name is the kubernetes resource name for the deployment meta data."
                     },
-                    "deploymentTargetName": {
+                    "targetClusterName": {
                         "type": "string",
-                        "description": "Deployment Target Name associated with the backup."
+                        "description": "Target cluster Name associated with the backup."
                     },
                     "namespaceName": {
                         "type": "string",
@@ -360,7 +360,7 @@
                     },
                     "dataServiceName": {
                         "type": "string",
-                        "description": "Name of the data service of deployment."
+                        "description": "Name of the data service of data service deployment."
                     },
                     "dataServiceVersion": {
                         "type": "string",
@@ -371,7 +371,7 @@
                         "description": "build tag of the image for the data service version."
                     }
                 },
-                "description": "Deployment Meta Data contains the details of the deployment associated with the backup."
+                "description": "DataService Deployment Meta Data contains the details of the deployment associated with the backup."
             },
             "v1ListBackupsResponse": {
                 "type": "object",

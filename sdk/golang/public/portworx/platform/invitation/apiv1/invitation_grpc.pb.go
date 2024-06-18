@@ -40,6 +40,7 @@ const (
 	InvitationService_DeleteInvitation_FullMethodName = "/public.portworx.platform.invitation.v1.InvitationService/DeleteInvitation"
 	InvitationService_GetInvitation_FullMethodName    = "/public.portworx.platform.invitation.v1.InvitationService/GetInvitation"
 	InvitationService_AcceptInvitation_FullMethodName = "/public.portworx.platform.invitation.v1.InvitationService/AcceptInvitation"
+	InvitationService_NotifyUser_FullMethodName       = "/public.portworx.platform.invitation.v1.InvitationService/NotifyUser"
 )
 
 // InvitationServiceClient is the client API for InvitationService service.
@@ -56,6 +57,8 @@ type InvitationServiceClient interface {
 	GetInvitation(ctx context.Context, in *GetInvitationRequest, opts ...grpc.CallOption) (*Invitation, error)
 	// AcceptInvitation API accepts the invitation from the system.
 	AcceptInvitation(ctx context.Context, in *AcceptInvitationRequest, opts ...grpc.CallOption) (*AcceptInvitationResponse, error)
+	// Notify re-send the mail notification to the user email in the invitation config.
+	NotifyUser(ctx context.Context, in *NotifyUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type invitationServiceClient struct {
@@ -111,6 +114,15 @@ func (c *invitationServiceClient) AcceptInvitation(ctx context.Context, in *Acce
 	return out, nil
 }
 
+func (c *invitationServiceClient) NotifyUser(ctx context.Context, in *NotifyUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, InvitationService_NotifyUser_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // InvitationServiceServer is the server API for InvitationService service.
 // All implementations must embed UnimplementedInvitationServiceServer
 // for forward compatibility
@@ -125,6 +137,8 @@ type InvitationServiceServer interface {
 	GetInvitation(context.Context, *GetInvitationRequest) (*Invitation, error)
 	// AcceptInvitation API accepts the invitation from the system.
 	AcceptInvitation(context.Context, *AcceptInvitationRequest) (*AcceptInvitationResponse, error)
+	// Notify re-send the mail notification to the user email in the invitation config.
+	NotifyUser(context.Context, *NotifyUserRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedInvitationServiceServer()
 }
 
@@ -146,6 +160,9 @@ func (UnimplementedInvitationServiceServer) GetInvitation(context.Context, *GetI
 }
 func (UnimplementedInvitationServiceServer) AcceptInvitation(context.Context, *AcceptInvitationRequest) (*AcceptInvitationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AcceptInvitation not implemented")
+}
+func (UnimplementedInvitationServiceServer) NotifyUser(context.Context, *NotifyUserRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method NotifyUser not implemented")
 }
 func (UnimplementedInvitationServiceServer) mustEmbedUnimplementedInvitationServiceServer() {}
 
@@ -250,6 +267,24 @@ func _InvitationService_AcceptInvitation_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _InvitationService_NotifyUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NotifyUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InvitationServiceServer).NotifyUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: InvitationService_NotifyUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InvitationServiceServer).NotifyUser(ctx, req.(*NotifyUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // InvitationService_ServiceDesc is the grpc.ServiceDesc for InvitationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -276,6 +311,10 @@ var InvitationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AcceptInvitation",
 			Handler:    _InvitationService_AcceptInvitation_Handler,
+		},
+		{
+			MethodName: "NotifyUser",
+			Handler:    _InvitationService_NotifyUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
