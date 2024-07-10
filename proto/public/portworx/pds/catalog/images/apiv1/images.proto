@@ -102,7 +102,17 @@ message ListImagesRequest {
   public.portworx.common.v1.Sort sort = 4;
   // Pagination parameters for listing data service images.
   public.portworx.common.v1.PageBasedPaginationRequest pagination = 5 [(google.api.field_behavior) = OPTIONAL];
-
+  // Enabled indicate either list all, only enabled or only disabled images.
+  enum Enabled {
+    // List all images.
+    ENABLED_UNSPECIFIED = 0;
+    // List only enabled images.
+    TRUE = 1;
+    // List only disabled images.
+    FALSE = 2;
+  }
+  // Filter images based on enabled flag.
+  Enabled enabled = 7 [(google.api.field_behavior) = OPTIONAL];
 }
 
 // Response to list images request.

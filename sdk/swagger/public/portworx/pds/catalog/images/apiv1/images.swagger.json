@@ -115,6 +115,21 @@
                             "type": "string",
                             "format": "int64"
                         }
+                    },
+                    {
+                        "name": "enabled",
+                        "description": "Filter images based on enabled flag.\n\n - ENABLED_UNSPECIFIED: List all images.\n - TRUE: List only enabled images.\n - FALSE: List only disabled images.",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "ENABLED_UNSPECIFIED",
+                                "TRUE",
+                                "FALSE"
+                            ],
+                            "default": "ENABLED_UNSPECIFIED"
+                        }
                     }
                 ],
                 "tags": [
@@ -167,6 +182,16 @@
     },
     "components": {
         "schemas": {
+            "ListImagesRequestEnabled": {
+                "type": "string",
+                "enum": [
+                    "ENABLED_UNSPECIFIED",
+                    "TRUE",
+                    "FALSE"
+                ],
+                "default": "ENABLED_UNSPECIFIED",
+                "description": "Enabled indicate either list all, only enabled or only disabled images.\n\n - ENABLED_UNSPECIFIED: List all images.\n - TRUE: List only enabled images.\n - FALSE: List only disabled images."
+            },
             "SortByField": {
                 "type": "string",
                 "enum": [
