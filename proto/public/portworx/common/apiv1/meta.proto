@@ -20,6 +20,7 @@ package public.portworx.common.v1;
 import "google/protobuf/timestamp.proto";
 import "google/api/field_behavior.proto";
 import "google/api/field_info.proto";
+import "proto-vendor/buf/validate/validate.proto";
 
 option go_package = "github.com/portworx/portworxapis/proto/public/portworx/common/apiv1;common";
 option java_multiple_files = true;
@@ -32,10 +33,16 @@ message Meta {
   string uid = 1 [(google.api.field_info).format = UUID4];
 
   // Name of the resource.
-  string name = 2;
+  string name = 2 [(buf.validate.field).string = {
+    pattern:   "^[a-zA-Z0-9][a-zA-Z0-9_\\-\\ ]*[a-zA-Z0-9]$",
+    min_len: 3,
+    max_len: 63,
+  }];
 
   // Description of the resource.
-  string description = 3;
+  string description = 3 [(buf.validate.field).string = {
+    max_len: 100,
+  }];
 
   // A string that identifies the version of this object that can be used by clients to determine when objects have changed.
   // This value must be passed unmodified back to the server by the client.
@@ -48,10 +55,52 @@ message Meta {
   google.protobuf.Timestamp update_time = 6 [(google.api.field_behavior) = OUTPUT_ONLY];
 
   // Labels to apply to the object.
-  map<string, string> labels = 7;
+  map<string, string> labels = 7 [(buf.validate.field).map = {
+    keys: {
+      cel: [
+        {
+          message: "a qualified name must consist of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character (e.g. 'MyName',  or 'my.name',  or '123-abc', regex used for validation is '([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]') with an optional DNS subdomain prefix and '/' (e.g. 'example.com/MyName')",
+          expression:
+            "(size(this.split('/')) == 1 && this.split('/')[0].matches('^([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$')) || "
+            "(size(this.split('/')) == 2 && this.split('/')[0].matches('^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$') && this.split('/')[1].matches('^([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$'))"
+        }
+      ],
+      string: {
+        min_len: 3,
+        max_len: 63
+      }
+    },
+    values: {
+      cel: [
+        {
+          message: "a valid label value must be an empty string or consist of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character"
+          expression:
+            "this == '' || this.matches('^([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$')"
+        }
+      ]
+      string: {
+        max_len: 63,
+      }
+    }
+  }];
 
   // Annotations for the object.
-  map<string, string> annotations = 8;
+  map<string, string> annotations = 8 [(buf.validate.field).map = {
+    keys: {
+      cel: [
+        {
+          message: "a qualified name must consist of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character (e.g. 'MyName',  or 'my.name',  or '123-abc', regex used for validation is '([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]') with an optional DNS subdomain prefix and '/' (e.g. 'example.com/MyName')",
+          expression:
+            "(size(this.split('/')) == 1 && this.split('/')[0].matches('^([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$')) || "
+            "(size(this.split('/')) == 2 && this.split('/')[0].matches('^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$') && this.split('/')[1].matches('^([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$'))"
+        }
+      ],
+      string: {
+        min_len: 3,
+        max_len: 63
+      }
+    },
+  }];
 
   // Reference to parent object of this resource.
   Reference parent_reference = 9 [(google.api.field_behavior) = OUTPUT_ONLY];

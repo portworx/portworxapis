@@ -1,0 +1,162 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "public/portworx/pds/metric/apiv1/metric.proto",
+        "version": "version not set"
+    },
+    "tags": [
+        {
+            "name": "MetricService"
+        }
+    ],
+    "paths": {
+        "/pds/v1/metrics": {
+            "get": {
+                "summary": "GetMetrics API returns the Metrics of DataService Deployment.",
+                "operationId": "MetricService_GetMetrics",
+                "responses": {
+                    "200": {
+                        "description": "A successful response.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/v1MetricsResponse"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "An unexpected error response.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/rpcStatus"
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "query",
+                        "description": "PromQL query string",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "dataServiceDeploymentId",
+                        "description": "Id of the dataservice.",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "startTime",
+                        "description": "Start time in milliseconds since epoch",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    },
+                    {
+                        "name": "endTime",
+                        "description": "End time in milliseconds since epoch",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    }
+                ],
+                "tags": [
+                    "MetricService"
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "protobufAny": {
+                "type": "object",
+                "properties": {
+                    "@type": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": {}
+            },
+            "rpcStatus": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "details": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/protobufAny"
+                        }
+                    }
+                }
+            },
+            "v1MetricsResponse": {
+                "type": "object",
+                "properties": {
+                    "timeSeries": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/v1TimeSeries"
+                        },
+                        "title": "List of time series data matching the query"
+                    }
+                },
+                "title": "Definition of the QueryResult message"
+            },
+            "v1Sample": {
+                "type": "object",
+                "properties": {
+                    "timeStamp": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Timestamp of the sample in milliseconds since epoch"
+                    },
+                    "value": {
+                        "type": "number",
+                        "format": "double",
+                        "title": "Numeric value of the metric at the specified timestamp"
+                    }
+                },
+                "title": "Definition of the Sample message"
+            },
+            "v1TimeSeries": {
+                "type": "object",
+                "properties": {
+                    "metricName": {
+                        "type": "string",
+                        "title": "Name of the metric"
+                    },
+                    "samples": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/v1Sample"
+                        },
+                        "title": "List of samples for this time series"
+                    }
+                },
+                "title": "Definition of the TimeSeries message"
+            }
+        }
+    }
+}

@@ -245,6 +245,12 @@ message Status {
 
   // last manifest reporting  time.
   google.protobuf.Timestamp manifest_time = 8;
+
+  // error_code.
+  string error_code = 9;
+
+  // error message.
+  string error_message = 10;
 }
 
 // Request to get the DataService Deployment resource.
