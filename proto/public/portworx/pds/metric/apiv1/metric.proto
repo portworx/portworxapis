@@ -1,0 +1,79 @@
+// Please use the following editor setup for this file:
+// Tab size=2; Tabs as spaces; Clean up trailing whitepsace
+//
+// In vim add: au FileType proto setl sw=2 ts=2 expandtab list
+//
+// In vscode install vscode-proto3 extension and add this to your settings.json:
+//    "[proto3]": {
+//        "editor.tabSize": 2,
+//        "editor.insertSpaces": true,
+//        "editor.rulers": [80],
+//        "editor.detectIndentation": true,
+//        "files.trimTrailingWhitespace": true
+//    }
+//
+
+syntax = "proto3";
+
+package public.portworx.pds.metric.v1;
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/portworx/portworxapis/proto/public/portworx/pds/metric/apiv1;metric";
+option java_multiple_files = true;
+option java_package = "com.public.portworx.pds.metric.v1";
+option java_outer_classname = "MetricProto";
+
+
+// MetricService serves Metric of deployment resource.
+service MetricService {
+  // (-- api-linter: core::0131::response-message-name=disabled
+  //     aip.dev/not-precedent: We need to do this because reasons. --)
+  // GetMetrics API returns the Metrics of DataService Deployment.
+  rpc GetMetrics(GetMetricsRequest)
+      returns (MetricsResponse) {
+    option(google.api.http) = {
+      get: "/pds/v1/metrics"
+    };
+  }
+}
+
+// Definition of the QueryRequest message
+message GetMetricsRequest {
+  // PromQL query string
+  string query = 1;
+  // Id of the dataservice.
+  string data_service_deployment_id = 2;
+  // Start time in milliseconds since epoch
+  google.protobuf.Timestamp start_time = 3;
+  // End time in milliseconds since epoch
+  google.protobuf.Timestamp end_time = 4;
+}
+
+// Definition of the QueryResult message
+message MetricsResponse {
+  // List of time series data matching the query
+  repeated TimeSeries time_series = 1;
+}
+
+// Definition of the TimeSeries message
+message TimeSeries {
+  // Name of the metric
+  string metric_name = 1;
+  // List of samples for this time series
+  repeated Sample samples = 2;
+}
+
+// Definition of the Sample message
+message Sample {
+  // (-- api-linter: core::0142::time-field-names=disabled
+  //     aip.dev/not-precedent: We need to do this because reasons. --)
+  // Timestamp of the sample in milliseconds since epoch
+  google.protobuf.Timestamp time_stamp = 1;
+  // Numeric value of the metric at the specified timestamp
+  double value = 2;
+}
+

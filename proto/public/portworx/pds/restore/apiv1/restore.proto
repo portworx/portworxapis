@@ -23,6 +23,7 @@ import "google/api/annotations.proto";
 import "public/portworx/common/apiv1/sort.proto";
 import "google/api/field_behavior.proto";
 import "google/protobuf/timestamp.proto";
+import "proto-vendor/buf/validate/validate.proto";
 
 option go_package = "github.com/portworx/portworxapis/proto/public/portworx/pds/restore/apiv1;restore";
 option java_multiple_files = true;
@@ -128,7 +129,11 @@ message RecreateRestoreRequest {
   // UID of the existing restore.
   string id = 1 [(google.api.field_behavior) = REQUIRED];
   // Name of the restore.
-  string name = 2 [(google.api.field_behavior) = REQUIRED];
+  string name = 2 [(google.api.field_behavior) = REQUIRED, (buf.validate.field).string = {
+    pattern:   "^[a-zA-Z][a-zA-Z0-9-_]*$",
+    min_len: 3,
+    max_len: 63,
+  }];
   // UID of the project associated with the restore.
   string project_id = 3 [(google.api.field_behavior) = REQUIRED];
   // UID of namespace where restore will be created.

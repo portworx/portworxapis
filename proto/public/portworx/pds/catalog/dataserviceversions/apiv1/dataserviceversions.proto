@@ -31,7 +31,7 @@ option java_outer_classname = "DataServiceVersionsProto";
 // DataServiceVersionService serves different versions of data services.
 service DataServiceVersionService {
   // ListDataServiceVersions lists all the versions of a data service.
-  rpc ListDataServiceVersions(ListDataServiceVersionsRequest)
+  rpc ListDataServiceVersions(ListDataServiceVersionsRequest) 
     returns (ListDataServiceVersionsResponse) {
     option(google.api.http) = {
       get: "/pds/v1/catalog/dataServices/{data_service_id}/dataServiceVersions"
@@ -39,7 +39,7 @@ service DataServiceVersionService {
   }
 
   // GetDataServiceVersion returns a data service version.
-  rpc GetDataServiceVersion(GetDataServiceVersionRequest)
+  rpc GetDataServiceVersion(GetDataServiceVersionRequest) 
     returns (DataServiceVersion) {
     option(google.api.http) = {
       get: "/pds/v1/catalog/dataServiceVersions/{id}"
@@ -47,7 +47,7 @@ service DataServiceVersionService {
   }
 
   // ListCompatibleDataServiceVersions lists all the data service versions compatible with other version of a data service.
-  rpc ListCompatibleDataServiceVersions(ListCompatibleDataServiceVersionsRequest)
+  rpc ListCompatibleDataServiceVersions(ListCompatibleDataServiceVersionsRequest) 
     returns (ListCompatibleDataServiceVersionsResponse) {
     option(google.api.http) = {
       get: "/pds/v1/catalog/dataServiceVersions:listCompatibleVersions"
@@ -90,7 +90,7 @@ message ListDataServiceVersionsResponse {
 message GetDataServiceVersionRequest {
   // UID of the version.
   string id = 1;
-}
+} 
 
 // ListCompatibleDataServiceVersionsRequest is the request for ListCompatibleVersions.
 message ListCompatibleDataServiceVersionsRequest {

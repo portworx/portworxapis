@@ -48,6 +48,8 @@ message InfraResource {
     BACKUP_POLICY = 8;
     // Infra resource of type template.
     TEMPLATE = 9;
+    // Infra resource of type invitation.
+    INVITATION = 10;
   }
 }
 
