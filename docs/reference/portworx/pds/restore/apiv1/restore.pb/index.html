@@ -1682,6 +1682,8 @@
       
         
       
+        
+      
     
     
       
@@ -1727,6 +1729,27 @@
   
   <span class="md-ellipsis">
     pdsapplicationresource
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../common/apiv1/podschedulingconfig.pb/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    podschedulingconfig
   </span>
   
 
@@ -5575,6 +5598,11 @@
 <td>custom_resource_name</td>
 <td><a href="#string"> string</a></td>
 <td>K8s resource name for restore, built from ["restore-" + name + short-id].</td>
+</tr>
+<tr>
+<td>pod_scheduling_config</td>
+<td><a href="#publicportworxpdscommonv1podschedulingconfig"> public.portworx.pds.common.v1.PodSchedulingConfig</a></td>
+<td>Optional Pod Scheduling Configuration. If not provided, the Pod Scheduling Configuration from the source deployment will be used.</td>
 </tr>
 <tr>
 <td><!-- end Fields --></td>

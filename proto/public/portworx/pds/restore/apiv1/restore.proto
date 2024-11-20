@@ -24,6 +24,7 @@ import "public/portworx/common/apiv1/sort.proto";
 import "google/api/field_behavior.proto";
 import "google/protobuf/timestamp.proto";
 import "proto-vendor/buf/validate/validate.proto";
+import "public/portworx/pds/common/apiv1/podschedulingconfig.proto";
 
 option go_package = "github.com/portworx/portworxapis/proto/public/portworx/pds/restore/apiv1;restore";
 option java_multiple_files = true;
@@ -158,6 +159,9 @@ message Config {
   DestinationReferences destination_references = 2;
   // K8s resource name for restore, built from ["restore-" + name + short-id].
   string custom_resource_name = 3 [(google.api.field_behavior) = OUTPUT_ONLY];
+  // Optional Pod Scheduling Configuration.
+  // If not provided, the Pod Scheduling Configuration from the source deployment will be used.
+  public.portworx.pds.common.v1.PodSchedulingConfig pod_scheduling_config = 4;
 }
 
 // SourceReferences for the restore.

@@ -345,6 +345,17 @@
                 "default": "FIELD_UNSPECIFIED",
                 "description": "Field names for sorting the list of resources.\n\n - FIELD_UNSPECIFIED: Unspecified, do not use.\n - NAME: Sorting based on the name of the resource.\n - CREATED_AT: Sorting on create time of the resource.\n - UPDATED_AT: Sorting on update time of the resource.\n - PHASE: Sorting on phase of the resource."
             },
+            "TolerationEffect": {
+                "type": "string",
+                "enum": [
+                    "EFFECT_UNSPECIFIED",
+                    "NO_EXECUTE",
+                    "NO_SCHEDULE",
+                    "PREFER_NO_SCHEDULE"
+                ],
+                "default": "EFFECT_UNSPECIFIED",
+                "description": "Effect represents the effect for the toleration.\n\n - EFFECT_UNSPECIFIED: EFFECT_UNSPECIFIED is the default value.\nEmpty toleration effect means match all taint effects.\n - NO_EXECUTE: NO_EXECUTE is the NoExecute effect.\n - NO_SCHEDULE: NO_SCHEDULE is the NoSchedule effect.\n - PREFER_NO_SCHEDULE: PREFER_NO_SCHEDULE is the PreferNoSchedule effect."
+            },
             "googlerpcStatus": {
                 "type": "object",
                 "properties": {
@@ -527,6 +538,9 @@
                     },
                     "storageOptions": {
                         "$ref": "#/components/schemas/v1Template"
+                    },
+                    "podSchedulingConfig": {
+                        "$ref": "#/components/schemas/v1PodSchedulingConfig"
                     }
                 },
                 "description": "A DataService topology contains a number of nodes that have various attributes as a collective group.\nThis is consumed in a DataService Deployment and the functionality is being controlled by the CRUD APIs of DataService Deployment."
@@ -658,6 +672,19 @@
                 },
                 "description": "Metadata related to page based pagination for paginated API responses."
             },
+            "v1PodSchedulingConfig": {
+                "type": "object",
+                "properties": {
+                    "tolerations": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/v1Toleration"
+                        },
+                        "description": "Tolerations to be applied on the application pods."
+                    }
+                },
+                "description": "PodSchedulingConfig represents the configuration for scheduling pods."
+            },
             "v1Reference": {
                 "type": "object",
                 "properties": {
@@ -733,6 +760,36 @@
                     }
                 },
                 "description": "Template."
+            },
+            "v1Toleration": {
+                "type": "object",
+                "properties": {
+                    "key": {
+                        "type": "string",
+                        "description": "Key is the key of the toleration."
+                    },
+                    "operator": {
+                        "$ref": "#/components/schemas/v1TolerationOperator"
+                    },
+                    "value": {
+                        "type": "string",
+                        "description": "Value is the value of the toleration."
+                    },
+                    "effect": {
+                        "$ref": "#/components/schemas/TolerationEffect"
+                    }
+                },
+                "description": "Toleration represents a Kubernetes toleration."
+            },
+            "v1TolerationOperator": {
+                "type": "string",
+                "enum": [
+                    "OPERATOR_UNSPECIFIED",
+                    "EQUAL",
+                    "EXISTS"
+                ],
+                "default": "OPERATOR_UNSPECIFIED",
+                "description": "Operator represents the operator for the toleration.\n\n - OPERATOR_UNSPECIFIED: OPERATOR_UNSPECIFIED is the default value.\n - EQUAL: EQUAL is the Equal operator.\n - EXISTS: EXISTS is the Exists operator."
             }
         }
     }
