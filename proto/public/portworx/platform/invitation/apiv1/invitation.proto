@@ -45,7 +45,7 @@ service InvitationService {
       };
   }
 
-  // ListInvitation API lists invitation in an account/tenant/project.
+  // ListInvitation API lists invitation in an Account/Tenant (Organization)/Project.
   rpc ListInvitations (ListInvitationsRequest)
     returns (ListInvitationsResponse){
       option(google.api.http) = {
@@ -131,7 +131,7 @@ message Config {
     // Account UID to which the user has been invited. User can be invited to multiple accounts.
     string account_id = 101 ;
 
-    // Tenant UID to which the user has been invited. User can be invited to multiple tenants.
+    // Tenant (Organization) UID to which the user has been invited. User can be invited to multiple organizations.
     string tenant_id = 102 ;
 
     // Project UID to which the user has been invited. User can be invited to multiple projects.
@@ -162,19 +162,26 @@ message CreateInvitationRequest {
 // ListInvitationRequest is the request message for listing all invitations in an account.
 message ListInvitationsRequest {
   // Resource ID for which invitation has been sent.
+  // Depricated, use Tenant (Organization) uid, project_uid instead.
   oneof resource_id {
     // Account UID to which the user has been invited. User can be invited to multiple accounts.
-    string account_id = 101 ;
+    string account_id = 101 [deprecated = true];
 
-    // Tenant UID to which the user has been invited. User can be invited to multiple tenants.
-    string tenant_id = 102 ;
+    // Tenant (Organization) UID to which the user has been invited. User can be invited to multiple organizations.
+    string tenant_id = 102 [deprecated = true];
 
     // Project UID to which the user has been invited. User can be invited to multiple projects.
-    string project_id = 103 ;
+    string project_id = 103 [deprecated = true];
   }
 
   // Pagination parameters for listing invitations.
   public.portworx.common.v1.PageBasedPaginationRequest pagination = 104;
+
+  // Tenant (Organization) UID to which the user has been invited.
+  string tenant_uid = 105 [(google.api.field_behavior) = REQUIRED];
+
+  // Project UID to which the user has been invited.
+  string project_uid = 106 ;
 }
 
 // ListInvitationResponse is the response message for listing all invitations in an account.
@@ -192,6 +199,8 @@ message ListInvitationsResponse {
 message DeleteInvitationRequest {
   // UID is the unique ID of the invitation.
   string uid = 1 [(google.api.field_info).format = UUID4];
+  // Project id, optional, if provided then invitation for specified project will be deleted.
+  string project_id = 2;
 }
 
 // AcceptInvitationRequest is the request message to accept an invitation.

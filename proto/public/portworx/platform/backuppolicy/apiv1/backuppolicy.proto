@@ -40,7 +40,7 @@ service BackupPolicyService {
     };
   }
 
-  // Create API creates a backup policy for a tenant.
+  // Create API creates a backup policy for a Tenant (Organization).
   rpc CreateBackupPolicy(CreateBackupPolicyRequest)
       returns(BackupPolicy) {
     option(google.api.http) = {
@@ -66,7 +66,7 @@ service BackupPolicyService {
   //     aip.dev/not-precedent: We need to do this because
   // we can't have advance filters as query params.
   // --)
-  // List API lists all the backup policies for a tenant.
+  // List API lists all the backup policies for a Tenant (Organization).
   rpc ListBackupPolicies(ListBackupPoliciesRequest)
       returns(ListBackupPoliciesResponse) {
     option(google.api.http) = {
@@ -77,7 +77,7 @@ service BackupPolicyService {
       }
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "List API lists all the backup policies for a tenant"
+      summary: "List API lists all the backup policies for a Tenant (Organization)"
   };
   }
 
@@ -98,10 +98,10 @@ message GetBackupPolicyRequest {
 
 // Request to create a backup policy.
 message CreateBackupPolicyRequest {
-  // The parent tenant id under which schedule will be created.
+  // The parent Tenant (Organization) id under which schedule will be created.
   // (-- api-linter: core::0133::request-unknown-fields=disabled
   //     aip.dev/not-precedent: We need this field for to support creation of
-  //     the resource in the tenant context. --)
+  //     the resource in the Tenant (Organization) context. --)
   string tenant_id = 1 ;
 
   // Backup Policy configuration.
@@ -119,9 +119,9 @@ message UpdateBackupPolicyMetaRequest {
   portworx.common.v1.Meta meta = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
-// Request to list the backup policies for a tenant.
+// Request to list the backup policies for a Tenant (Organization).
 message ListBackupPoliciesRequest {
-  // Tenant ID for which the backup policies will be listed.
+  // Tenant (Organization) ID for which the backup policies will be listed.
   string tenant_id = 1;
 
   // Pagination metadata for listing backup policies.
@@ -146,7 +146,7 @@ message ListBackupPoliciesRequest {
 
 // Response of list backup policies.
 message ListBackupPoliciesResponse {
-  // The list of backup policies scoped to a tenant.
+  // The list of backup policies scoped to a Tenant (Organization).
   repeated BackupPolicy backup_policies = 1;
 
   // Pagination metadata for this response.

@@ -60,6 +60,19 @@ service LoginService {
         get: "/core/v1/oauth:oidcInfo"
       };
   }
+
+  // Logout API returns removes the session cookie of the user and invalidates the access token.
+  // (-- api-linter: core::0131::request-message-name=disabled
+  //     aip.dev/not-precedent: We need to do this because api does not require input. --)
+  // (-- api-linter: core::0136::verb-noun=disabled
+  //     aip.dev/not-precedent: We need to do this because for logout, it attempts invaldation of both refreshToken and idToken, therfore mentioning both nouns makes it verbose--)
+  rpc Logout(google.protobuf.Empty)
+    returns (google.protobuf.Empty) {
+    option(google.api.http) = {
+      post: "/core/v1/oauth:logout"
+      body: "*"
+    };
+  }
 }
 
 // Request for getting the user ID token in exchange for the given username and password.

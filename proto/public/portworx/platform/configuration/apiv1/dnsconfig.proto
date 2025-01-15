@@ -1,0 +1,72 @@
+// Please use the following editor setup for this file:
+// Tab size=2; Tabs as spaces; Clean up trailing whitepsace
+//
+// In vim add: au FileType proto setl sw=2 ts=2 expandtab list
+//
+// In vscode install vscode-proto3 extension and add this to your settings.json:
+//    "[proto3]": {
+//        "editor.tabSize": 2,
+//        "editor.insertSpaces": true,
+//        "editor.rulers": [80],
+//        "editor.detectIndentation": true,
+//        "files.trimTrailingWhitespace": true
+//    }
+//
+
+syntax = "proto3";
+
+package public.portworx.platform.configuration.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/portworx/portworxapis/proto/public/portworx/platform/configuration/apiv1;configuration";
+option java_multiple_files = true;
+option java_package = "com.public.portworx.platform.configuration.v1";
+option java_outer_classname = "DNSConfigProto";
+
+// Placeholder for DNS Config.
+message DNSConfig {
+     // DNS Provider.
+     DNSProvider dns_provider = 1;
+     // Customer managed the external DNS on the cluster.
+     bool customer_managed = 2;
+     // Provider details.
+     oneof provider_details{
+      // Bluecat Config.
+      BluecatConfig bluecat = 10;
+     }
+}
+
+// Bluecat Config.
+message BluecatConfig{
+  // DNS configuration key in bluecat config.
+  // (-- api-linter: core::0140::abbreviations=disabled
+  //     aip.dev/not-precedent: Pre defined key for bluecat config. --)
+  string dns_configuration = 1;
+  // DNS View: eg internal.
+  string dns_view = 2;
+  // Root zone of the hosted zone.
+  string root_zone = 3;
+  // Gateway host
+  string gateway_host = 4;
+  // Credentials.
+  Credentials credentials = 5;
+
+  // Credentials.
+  message Credentials {
+    // Gateway username.
+    string gateway_username = 1;
+    // Gateway Password.
+    string gateway_password = 2;
+  }
+}
+
+// DNS Provider.
+enum DNSProvider{
+    // Unspecified.
+    DNS_PROVIDER_UNSPECIFIED = 0;
+    // Portworx managed: Default.
+    PORTWORX_MANAGED = 1;
+    // BlueCat.
+    BLUECAT = 2;
+}

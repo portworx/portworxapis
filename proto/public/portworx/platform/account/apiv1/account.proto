@@ -73,13 +73,11 @@ message Account {
 }
 
 // Desired configuration of the account.
+// @param dns_name has been deprecated and moved to config management.
 message Config {
 
   // email of the first account user.
   string user_email = 1 [(google.api.field_behavior) = OUTPUT_ONLY];
-
- // Account DNS name.
-  string dns_name = 2 [(google.api.field_behavior) = OPTIONAL];
 
   // Display name of Account.
   string display_name = 3 [(google.api.field_behavior) = OPTIONAL];

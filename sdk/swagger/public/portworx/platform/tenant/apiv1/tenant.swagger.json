@@ -12,7 +12,7 @@
     "paths": {
         "/core/v1/tenants": {
             "get": {
-                "summary": "ListTenants API lists the tenants visible to the caller for the current account.",
+                "summary": "ListTenants API lists the Tenants (Organizations) visible to the caller for the current account.",
                 "operationId": "TenantService_ListTenants",
                 "responses": {
                     "200": {
@@ -56,6 +56,54 @@
                             "type": "string",
                             "format": "int64"
                         }
+                    },
+                    {
+                        "name": "respData",
+                        "description": "Response data flags for the behaviour of the list response attributes.\n\n - RESP_DATA_UNSPECIFIED: RespData Unspecified. complete resource will be populated.\n - INDEX: only uid, name, labels should be populated.\n - LITE: only meta data should be populated.\n - FULL: complete resource should be populated.",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "RESP_DATA_UNSPECIFIED",
+                                "INDEX",
+                                "LITE",
+                                "FULL"
+                            ],
+                            "default": "RESP_DATA_UNSPECIFIED"
+                        }
+                    },
+                    {
+                        "name": "sort.sortBy",
+                        "description": "Name of the attribute to sort results by.\n\n - FIELD_UNSPECIFIED: Unspecified, do not use.\n - NAME: Sorting based on the name of the resource.\n - CREATED_AT: Sorting on create time of the resource.\n - UPDATED_AT: Sorting on update time of the resource.\n - PHASE: Sorting on phase of the resource.",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "FIELD_UNSPECIFIED",
+                                "NAME",
+                                "CREATED_AT",
+                                "UPDATED_AT",
+                                "PHASE"
+                            ],
+                            "default": "FIELD_UNSPECIFIED"
+                        }
+                    },
+                    {
+                        "name": "sort.sortOrder",
+                        "description": "Order of sorting to be applied on requested list.\nIf sort_by having some value and sort_order is not provided, by default ascending order will be used to sort the list.\n\n - VALUE_UNSPECIFIED: Unspecified, do not use.\n - ASC: Sort order ascending.\n - DESC: Sort order descending.",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "VALUE_UNSPECIFIED",
+                                "ASC",
+                                "DESC"
+                            ],
+                            "default": "VALUE_UNSPECIFIED"
+                        }
                     }
                 ],
                 "tags": [
@@ -63,7 +111,7 @@
                 ]
             },
             "post": {
-                "summary": "CreateTenant API creates a new Tenant.",
+                "summary": "CreateTenant API creates a new Tenant (Organization).",
                 "operationId": "TenantService_CreateTenant",
                 "responses": {
                     "200": {
@@ -95,7 +143,7 @@
                             }
                         }
                     },
-                    "description": "tenant to be created.",
+                    "description": "Tenant (Organization) details which to be created.",
                     "required": true
                 },
                 "tags": [
@@ -105,7 +153,7 @@
         },
         "/core/v1/tenants/{tenant.meta.uid}": {
             "put": {
-                "summary": "UpdateTenant API updates tenant.",
+                "summary": "UpdateTenant API updates Tenant (Organization).",
                 "operationId": "TenantService_UpdateTenant",
                 "responses": {
                     "200": {
@@ -199,18 +247,18 @@
                                                 "readOnly": true
                                             }
                                         },
-                                        "description": "Metadata of the tenant.",
-                                        "title": "Metadata of the tenant."
+                                        "description": "Metadata of the Tenant (Organization).",
+                                        "title": "Metadata of the Tenant (Organization)."
                                     },
                                     "status": {
                                         "$ref": "#/components/schemas/tenantv1Status"
                                     }
                                 },
-                                "title": "tenant which  needs to be updated."
+                                "title": "Tenant (Organization) which needs to be updated."
                             }
                         }
                     },
-                    "description": "tenant which  needs to be updated.",
+                    "description": "Tenant (Organization) which needs to be updated.",
                     "required": true
                 },
                 "tags": [
@@ -220,7 +268,7 @@
         },
         "/core/v1/tenants/{tenantId}": {
             "get": {
-                "summary": "GetTenant API returns the info about  for given tenant id.",
+                "summary": "GetTenant API returns the info about  for given Tenant (Organization) id.",
                 "operationId": "TenantService_GetTenant",
                 "responses": {
                     "200": {
@@ -247,7 +295,7 @@
                 "parameters": [
                     {
                         "name": "tenantId",
-                        "description": "ID of the tenant which needs to get info.",
+                        "description": "ID of the Tenant (Organization) which needs to get info.",
                         "in": "path",
                         "required": true,
                         "schema": {
@@ -260,7 +308,7 @@
                 ]
             },
             "delete": {
-                "summary": "Delete tenant removes a tenant record.",
+                "summary": "DeleteTenant removes a Tenant (Organization) record.",
                 "operationId": "TenantService_DeleteTenant",
                 "responses": {
                     "200": {
@@ -288,7 +336,7 @@
                 "parameters": [
                     {
                         "name": "tenantId",
-                        "description": "ID of the tenant which needs to be deleted.",
+                        "description": "ID of the Tenant (Organization) which needs to be deleted.",
                         "in": "path",
                         "required": true,
                         "schema": {
@@ -296,6 +344,90 @@
                         }
                     }
                 ],
+                "tags": [
+                    "TenantService"
+                ]
+            }
+        },
+        "/core/v1/tenants/{tenantId}/resource:verbose": {
+            "get": {
+                "summary": "GetResourceCount will fetch the count of each resource under the given Tenant (Organization).",
+                "operationId": "TenantService_GetResourceCount",
+                "responses": {
+                    "200": {
+                        "description": "A successful response.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/v1GetResourceCountResponse"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "An unexpected error response.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/googlerpcStatus"
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "tenantId",
+                        "description": "Tenant (Organization) id for which the resource count has to be listed.",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "tags": [
+                    "TenantService"
+                ]
+            }
+        },
+        "/core/v1/tenants:search": {
+            "post": {
+                "summary": "ListTenants API lists the Tenants (Organizations) visible to the caller for the current account.",
+                "operationId": "TenantService_ListTenants2",
+                "responses": {
+                    "200": {
+                        "description": "A successful response.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/v1ListTenantsResponse"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "An unexpected error response.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/googlerpcStatus"
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/v1ListTenantsRequest"
+                            }
+                        }
+                    },
+                    "description": "ListTenantsRequest  is the request message to the ListTenants API.",
+                    "required": true
+                },
                 "tags": [
                     "TenantService"
                 ]
@@ -323,6 +455,26 @@
                 },
                 "description": "ResourceFilter is filter for a given resource type."
             },
+            "SelectorFilter": {
+                "type": "object",
+                "properties": {
+                    "key": {
+                        "type": "string",
+                        "description": "Key of key,value pair against which filtering needs to be performs."
+                    },
+                    "op": {
+                        "$ref": "#/components/schemas/SelectorOperator"
+                    },
+                    "values": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Value of key,value pair against which filtering needs to be performs if operator is EXIST, value should be an empty array."
+                    }
+                },
+                "description": "Filter for a given key."
+            },
             "SelectorOperator": {
                 "type": "string",
                 "enum": [
@@ -333,6 +485,28 @@
                 ],
                 "default": "OPERATOR_UNSPECIFIED",
                 "description": "Operator specifies the relationship between the provided (key,value) pairs in the response.\n\n - OPERATOR_UNSPECIFIED: Unspecified, do not use.\n - IN: IN specifies that the key should be associated with atleast 1 of the element in value list.\n - NOT_IN: NOT_IN specifies that the key should not be associated with any of the element in value list.\n - LIKE: LIKE specified that the key should be of a specified pattern"
+            },
+            "SortByField": {
+                "type": "string",
+                "enum": [
+                    "FIELD_UNSPECIFIED",
+                    "NAME",
+                    "CREATED_AT",
+                    "UPDATED_AT",
+                    "PHASE"
+                ],
+                "default": "FIELD_UNSPECIFIED",
+                "description": "Field names for sorting the list of resources.\n\n - FIELD_UNSPECIFIED: Unspecified, do not use.\n - NAME: Sorting based on the name of the resource.\n - CREATED_AT: Sorting on create time of the resource.\n - UPDATED_AT: Sorting on update time of the resource.\n - PHASE: Sorting on phase of the resource."
+            },
+            "SortOrderValue": {
+                "type": "string",
+                "enum": [
+                    "VALUE_UNSPECIFIED",
+                    "ASC",
+                    "DESC"
+                ],
+                "default": "VALUE_UNSPECIFIED",
+                "description": "Value of sort order for the list of resources.\n\n - VALUE_UNSPECIFIED: Unspecified, do not use.\n - ASC: Sort order ascending.\n - DESC: Sort order descending."
             },
             "googlerpcStatus": {
                 "type": "object",
@@ -366,13 +540,72 @@
                 "properties": {
                     "reason": {
                         "type": "string",
-                        "description": "Textual information for the current state of the tenant."
+                        "description": "Textual information for the current state of the Tenant (Organization)."
                     },
                     "phase": {
                         "$ref": "#/components/schemas/v1PhaseType"
                     }
                 },
-                "description": "Status represents the current state of the tenant."
+                "description": "Status represents the current state of the Tenant (Organization)."
+            },
+            "v1GetResourceCountResponse": {
+                "type": "object",
+                "properties": {
+                    "meta": {
+                        "$ref": "#/components/schemas/v1Meta"
+                    },
+                    "project": {
+                        "type": "integer",
+                        "format": "int32",
+                        "description": "Number of projects under the given Tenant (Organization)."
+                    },
+                    "targetCluster": {
+                        "type": "integer",
+                        "format": "int32",
+                        "description": "Number of clusters under the given Tenant (Organization)."
+                    },
+                    "namespace": {
+                        "type": "integer",
+                        "format": "int32",
+                        "description": "Number of namespaces under the given Tenant (Organization)."
+                    },
+                    "credential": {
+                        "type": "integer",
+                        "format": "int32",
+                        "description": "Number of credentials under the given Tenant (Organization)."
+                    },
+                    "backupLocation": {
+                        "type": "integer",
+                        "format": "int32",
+                        "description": "Number of backup location under the given Tenant (Organization)."
+                    },
+                    "backupPolicy": {
+                        "type": "integer",
+                        "format": "int32",
+                        "description": "Number of backup policies under the given Tenant (Organization)."
+                    },
+                    "template": {
+                        "type": "integer",
+                        "format": "int32",
+                        "description": "Number of templates under the given Tenant (Organization)."
+                    },
+                    "dataServiceDeployment": {
+                        "type": "integer",
+                        "format": "int32",
+                        "description": "Number of data service deployments under the given Tenant (Organization)."
+                    },
+                    "backup": {
+                        "type": "integer",
+                        "format": "int32",
+                        "description": "Number of backups under the given Tenant (Organization)."
+                    },
+                    "restore": {
+                        "type": "integer",
+                        "format": "int32",
+                        "description": "Number of restores under the given Tenant (Organization)."
+                    }
+                },
+                "description": "\nGetResourceCountResponse contsins list of resource count under a Tenant (Organization)."
             },
             "v1InfraResourceType": {
                 "type": "string",
@@ -390,7 +623,28 @@
                     "INVITATION"
                 ],
                 "default": "TYPE_UNSPECIFIED",
-                "description": "Type of the resource.\n\n - TYPE_UNSPECIFIED: Unspecified, do not use.\n - ACCOUNT: Currently supported infra resources.\nInfra resource of type account.\n - TENANT: Infra resource of type tenant.\n - PROJECT: Infra resource of type projects.\n - TARGET_CLUSTER: Infra resource target cluster.\n - NAMESPACE: Infra resource of type namespace.\n - CREDENTIAL: Infra resource of type credential.\n - BACKUP_LOCATION: Infra resource of type backup location.\n - BACKUP_POLICY: Infra resource of type backup policy.\n - TEMPLATE: Infra resource of type template.\n - INVITATION: Infra resource of type invitation."
+                "description": "Type of the resource.\n\n - TYPE_UNSPECIFIED: Unspecified, do not use.\n - ACCOUNT: Currently supported infra resources.\nInfra resource of type account.\n - TENANT: Infra resource of type Tenant (Organization).\n - PROJECT: Infra resource of type projects.\n - TARGET_CLUSTER: Infra resource target cluster.\n - NAMESPACE: Infra resource of type namespace.\n - CREDENTIAL: Infra resource of type credential.\n - BACKUP_LOCATION: Infra resource of type backup location.\n - BACKUP_POLICY: Infra resource of type backup policy.\n - TEMPLATE: Infra resource of type template.\n - INVITATION: Infra resource of type invitation."
+            },
+            "v1ListTenantsRequest": {
+                "type": "object",
+                "properties": {
+                    "pagination": {
+                        "$ref": "#/components/schemas/v1PageBasedPaginationRequest"
+                    },
+                    "resourceSelector": {
+                        "$ref": "#/components/schemas/v1ResourceSelector"
+                    },
+                    "fieldSelector": {
+                        "$ref": "#/components/schemas/v1Selector"
+                    },
+                    "respData": {
+                        "$ref": "#/components/schemas/v1RespData"
+                    },
+                    "sort": {
+                        "$ref": "#/components/schemas/v1Sort"
+                    }
+                },
+                "description": "ListTenantsRequest  is the request message to the ListTenants API."
             },
             "v1ListTenantsResponse": {
                 "type": "object",
@@ -400,13 +654,13 @@
                         "items": {
                             "$ref": "#/components/schemas/v1Tenant"
                         },
-                        "description": "list of tenant response."
+                        "description": "list of Tenant (Organization)."
                     },
                     "pagination": {
                         "$ref": "#/components/schemas/v1PageBasedPaginationResponse"
                     }
                 },
-                "description": "ListTenantsResponse is the response message to the ListTenants API and contains\nthe list of tenants visible to the caller."
+                "description": "ListTenantsResponse is the response message to the ListTenants API and contains\nthe list of Tenants (Organizations) visible to the caller."
             },
             "v1Meta": {
                 "type": "object",
@@ -529,7 +783,7 @@
                     "DELETE_FAILED"
                 ],
                 "default": "TYPE_UNSPECIFIED",
-                "description": "Type of phase the tenant is in currently should be one of the below.\n\n - TYPE_UNSPECIFIED: Unspecified, do not use.\n - ACTIVE: The tenant is in use and active.\n - DELETE_PENDING: Deletion of tenant has not started.\n - DELETE_IN_PROGRESS: Deletion of the tenant is scheduled and in progress.\n - DELETE_FAILED: Deletion is failed"
+                "description": "Type of phase the Tenant (Organization) is in currently should be one of the below.\n\n - TYPE_UNSPECIFIED: Unspecified, do not use.\n - ACTIVE: The Tenant (Organization) is in use and active.\n - DELETE_PENDING: Deletion of Tenant (Organization) has not started.\n - DELETE_IN_PROGRESS: Deletion of the Tenant (Organization) is scheduled and in progress.\n - DELETE_FAILED: Deletion is failed"
             },
             "v1Reference": {
                 "type": "object",
@@ -561,6 +815,42 @@
                     }
                 },
                 "description": "ResourceSelector is used to query resources using the associated infra resources."
+            },
+            "v1RespData": {
+                "type": "string",
+                "enum": [
+                    "RESP_DATA_UNSPECIFIED",
+                    "INDEX",
+                    "LITE",
+                    "FULL"
+                ],
+                "default": "RESP_DATA_UNSPECIFIED",
+                "description": "RespData provides flags which provides info about the fields that should be populated in the response.\n\n - RESP_DATA_UNSPECIFIED: RespData Unspecified. complete resource will be populated.\n - INDEX: only uid, name, labels should be populated.\n - LITE: only meta data should be populated.\n - FULL: complete resource should be populated."
+            },
+            "v1Selector": {
+                "type": "object",
+                "properties": {
+                    "filters": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/SelectorFilter"
+                        },
+                        "description": "FilterList is the list of all filters that should be applied."
+                    }
+                },
+                "description": "Selector is used to query resources using the associated labels or field names."
+            },
+            "v1Sort": {
+                "type": "object",
+                "properties": {
+                    "sortBy": {
+                        "$ref": "#/components/schemas/SortByField"
+                    },
+                    "sortOrder": {
+                        "$ref": "#/components/schemas/SortOrderValue"
+                    }
+                },
+                "description": "The details of the attribute for which the requested list of resource to be sorted."
             },
             "v1Tenant": {
                 "type": "object",

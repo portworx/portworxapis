@@ -41,7 +41,7 @@ service TemplateService {
     };
   }
 
-  // Create API creates a set of templates for a tenant.
+  // Create API creates a set of templates for a Tenant (Organization).
   rpc CreateTemplate(CreateTemplateRequest)
     returns(Template) {
     option(google.api.http) = {
@@ -66,7 +66,7 @@ service TemplateService {
   //     aip.dev/not-precedent: We need to do this because
   // we can't have advance filters as query params.
   // --)
-  // List API lists all the templates for a tenant.
+  // List API lists all the templates for a Tenant (Organization).
   rpc ListTemplates(ListTemplatesRequest)
     returns(ListTemplatesResponse) {
     option(google.api.http) = {
@@ -77,7 +77,7 @@ service TemplateService {
       }
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "List API lists all the templates for a tenant"
+      summary: "List API lists all the templates for a Tenant (Organization)"
     };
   }
 
@@ -131,10 +131,10 @@ message Status{
 
 // Request to create template instance.
 message CreateTemplateRequest {
-  // The parent tenant id under which template will be created.
+  // The parent Tenant (Organization) id under which template will be created.
   // (-- api-linter: core::0133::request-unknown-fields=disabled
   //     aip.dev/not-precedent: We need this field for to support creation of
-  //     the resource in the tenant context. --)
+  //     the resource in the Tenant (Organization) context. --)
   string tenant_id = 1 ;
   // Information about the template instance that needs to be created.
   Template template = 2;
@@ -146,9 +146,9 @@ message GetTemplateRequest {
   string id = 1;
 }
 
-// Request to list the templates for a tenant.
+// Request to list the templates for a Tenant (Organization).
 message ListTemplatesRequest {
-  // Tenant ID for which the credentials will be listed.
+  // Tenant (Organization) ID for which the credentials will be listed.
   string tenant_id = 1;
   // Pagination metadata for this response.
   public.portworx.common.v1.PageBasedPaginationRequest pagination = 2;
@@ -176,7 +176,7 @@ message DeleteTemplateRequest {
 
 // Response of list templates.
 message ListTemplatesResponse {
-  // The list of templates scoped to a tenant.
+  // The list of templates scoped to a Tenant (Organization).
   repeated Template templates = 1;
   // Pagination metadata for this response.
   // (-- api-linter: core::0132::response-unknown-fields=disabled

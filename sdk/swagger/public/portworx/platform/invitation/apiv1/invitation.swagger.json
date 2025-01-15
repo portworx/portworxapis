@@ -12,7 +12,7 @@
     "paths": {
         "/core/v1/invite": {
             "get": {
-                "summary": "ListInvitation API lists invitation in an account/tenant/project.",
+                "summary": "ListInvitation API lists invitation in an Account/Tenant (Organization)/Project.",
                 "operationId": "InvitationService_ListInvitations",
                 "responses": {
                     "200": {
@@ -48,7 +48,7 @@
                     },
                     {
                         "name": "tenantId",
-                        "description": "Tenant UID to which the user has been invited. User can be invited to multiple tenants.",
+                        "description": "Tenant (Organization) UID to which the user has been invited. User can be invited to multiple organizations.",
                         "in": "query",
                         "required": false,
                         "schema": {
@@ -82,6 +82,24 @@
                         "schema": {
                             "type": "string",
                             "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "tenantUid",
+                        "description": "Tenant (Organization) UID to which the user has been invited.",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "projectUid",
+                        "description": "Project UID to which the user has been invited.",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 ],
@@ -203,6 +221,15 @@
                         "description": "UID is the unique ID of the invitation.",
                         "in": "path",
                         "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "projectId",
+                        "description": "Project id, optional, if provided then invitation for specified project will be deleted.",
+                        "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -359,7 +386,7 @@
                     },
                     "tenantId": {
                         "type": "string",
-                        "description": "Tenant UID to which the user has been invited. User can be invited to multiple tenants."
+                        "description": "Tenant (Organization) UID to which the user has been invited. User can be invited to multiple organizations."
                     },
                     "projectId": {
                         "type": "string",
@@ -427,7 +454,7 @@
                         "items": {
                             "$ref": "#/components/schemas/v1RoleBinding"
                         },
-                        "description": "Tenant represents the tenant level role bindings and resource IDs."
+                        "description": "Tenant (Organization) represents the Organization level role bindings and resource IDs."
                     },
                     "project": {
                         "type": "array",
@@ -620,7 +647,7 @@
                 "properties": {
                     "roleName": {
                         "type": "string",
-                        "description": "Role name represents the role for a tenant/project/namespace."
+                        "description": "Role name represents the role for a Tenant (Organization)/project/namespace."
                     },
                     "resourceIds": {
                         "type": "array",
@@ -630,7 +657,7 @@
                         "description": "Resource IDs represent the IDs bounded for the given role."
                     }
                 },
-                "description": "RoleBinding represents the tenant/project/namespace level role bindings and resource IDS."
+                "description": "RoleBinding represents the Tenant (Organization)/project/namespace level role bindings and resource IDS."
             }
         }
     }

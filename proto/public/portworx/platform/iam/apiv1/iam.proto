@@ -40,7 +40,7 @@ service IAMService {
     };
   }
 
-  // GrantIAM API creates new IAM role-binding at tenant, project and account level.
+  // GrantIAM API creates new IAM role-binding at Tenant (Organization), project and account level.
   rpc GrantIAM(GrantIAMRequest)
     returns(GrantIAMResponse) {
       option(google.api.http) = {
@@ -49,7 +49,7 @@ service IAMService {
       };
     }
 
-   // RevokeIAM API delete IAM role-binding at tenant, project and account level.
+   // RevokeIAM API delete IAM role-binding at Tenant (Organization), project and account level.
    rpc RevokeIAM(RevokeIAMRequest)
    returns(RevokeIAMResponse) {
      option(google.api.http) = {
@@ -67,9 +67,7 @@ service IAMService {
   }
 
   // ListIAMPermissions API list permissions for Roles in IAM.
-  // (-- api-linter: core::0132::request-message-name=disabled
-  //     aip.dev/not-precedent: We need to do this because reasons. we don't need any parameter in request --)
-  rpc ListIAMPermissions(google.protobuf.Empty)
+  rpc ListIAMPermissions(ListIAMPermissionsRequest)
   returns(ListIAMPermissionsResponse) {
     option(google.api.http) = {
       get: "/core/v1/iam/permissions"
@@ -108,16 +106,16 @@ message CreateIAMRequest {
   IAM iam = 1;
 }
 
-// GrantIAMRequest to grant add a new role in the IAM for tenant, project or account.
+// GrantIAMRequest to grant add a new role in the IAM for Tenant (Organization), project or account.
 message GrantIAMRequest {
 
   // Specifies the resource ID under which a new role needs to be added.
-  // Choose one of the following identifiers: account_id, tenant_id, or project_id.
+  // Choose one of the following identifiers: account_id, Tenant (Organization) id, or project_id.
   oneof resource_id {
     // Account UID under which user wants to add role binding.
     string account_id = 101 ;
 
-    // Tenant UID  under which user wants to add role binding.
+    // Tenant (Organization) UID  under which user wants to add role binding.
     string tenant_id = 102 ;
 
     // Project UID under which user wants to add role binding.
@@ -139,16 +137,16 @@ message GrantIAMResponse {
 }
 
 
-// RevokeIAMRequest to revoke/delete a role binding at tenant, project or account.
+// RevokeIAMRequest to revoke/delete a role binding at Tenant (Organization), project or account.
 message RevokeIAMRequest {
 
   // Specifies the resource ID from which role binding needs to be deleted/revoke.
-  // Choose one of the following identifiers: account_id, tenant_id, or project_id.
+  // Choose one of the following identifiers: account_id, Tenant (Organization) id, or project_id.
   oneof resource_id {
     // Account UID under which user wants to delete role .
     string account_id = 101 ;
 
-    // Tenant UID  under which user wants to delete role .
+    // Tenant (Organization) UID  under which user wants to delete role .
     string tenant_id = 102 ;
 
     // Project UID under which user wants to delete role .
@@ -183,6 +181,19 @@ message ListIAMPermissionsResponse {
   repeated string permissions = 1;
 }
 
+// ListIAMPermissionsRequest is the request to fetch user's permissions.
+message ListIAMPermissionsRequest {
+  // Tenant (Organization) ID in context to which the permissions of the user to be listed.
+  // (-- api-linter: core::0132::response-unknown-fields=disabled
+  //     aip.dev/not-precedent: We really need this field to list permissions for roles in IAM. --)
+  string tenant_id = 1 [(google.api.field_behavior) = REQUIRED];
+
+  // permission request is to list the permissions of the user on given project.
+  // (-- api-linter: core::0132::response-unknown-fields=disabled
+  //     aip.dev/not-precedent: We really need this field to list permissions for roles in IAM. --)
+  string project_id = 2;
+}
+
 // UpdateIAMRequest replaces the existing role binding.
 message UpdateIAMRequest {
   // IAM to be updated.
@@ -200,15 +211,16 @@ message ListIAMRequest {
   // Actor ID for which the IAM should be listed.
   string actor_id=1;
 
+  // Deprecated, use Tenant (Organization) UID and project_uid instead of resource_id.
   oneof resource_id {
     // Account UID for which the IAM should be listed.
-    string account_id = 101 ;
+    string account_id = 101 [deprecated = true];
 
-    // Tenant UID for which the IAM should be listed.
-    string tenant_id = 102 ;
+    // Tenant (Organization) UID for which the IAM should be listed.
+    string tenant_id = 102 [deprecated = true];
 
     // Project UID for which the IAM should be listed.
-    string project_id = 103 ;
+    string project_id = 103 [deprecated = true];
   }
 
   // Sorting details using which requested list of iams to be sorted.
@@ -216,6 +228,12 @@ message ListIAMRequest {
 
   // Pagination parameters for listing IAM.
   public.portworx.common.v1.PageBasedPaginationRequest pagination = 3;
+
+  // Tenant (Organization) UID for which the IAM should be listed.
+  string tenant_uid = 4 [(google.api.field_behavior) = REQUIRED];
+
+  // Project UID for which the IAM should be listed.
+  string project_uid = 5 ;
 }
 
 
@@ -281,7 +299,7 @@ message AccessPolicy {
   // Account represents the account role names.
   repeated string account = 2;
 
-  // Tenant represents the tenant level role bindings and resource IDs.
+  // Tenant (Organization) represents the Organization level role bindings and resource IDs.
   repeated RoleBinding tenant = 3;
 
   // Project represents the project level role bindings and resource IDS.
@@ -291,9 +309,9 @@ message AccessPolicy {
   repeated RoleBinding namespace = 5;
 }
 
-// RoleBinding represents the tenant/project/namespace level role bindings and resource IDS.
+// RoleBinding represents the Tenant (Organization)/project/namespace level role bindings and resource IDS.
 message RoleBinding {
-  // Role name represents the role for a tenant/project/namespace.
+  // Role name represents the role for a Tenant (Organization)/project/namespace.
   string role_name = 1;
 
   // Resource IDs represent the IDs bounded for the given role.

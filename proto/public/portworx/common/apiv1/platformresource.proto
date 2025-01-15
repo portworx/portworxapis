@@ -32,7 +32,7 @@ message InfraResource {
     // Currently supported infra resources.
     // Infra resource of type account.
     ACCOUNT = 1;
-    // Infra resource of type tenant.
+    // Infra resource of type Tenant (Organization).
     TENANT = 2;
     // Infra resource of type projects.
     PROJECT = 3;
