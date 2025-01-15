@@ -34,9 +34,9 @@ message PodSchedulingConfig {
 message Toleration {
   option (buf.validate.message).cel = {
     id :"when_key_is_empty_operator_must_be_equal_to_Exists",
-    message: "when `key` is empty operator must be equal to EXISTS , which means match all values and all keys"
+    message: "when `key` is empty operator must be equal to Exists, which means match all values and all keys"
     expression:
-      "this.key == '' && this.operator != 2 ? false : true"
+      "this.key == '' && this.operator != 'Exists' ? false : true"
   };
 
   // Note: If operator is unspecified, it defaults to "Equal" as per k8s spec.
@@ -44,14 +44,14 @@ message Toleration {
     id :"when_op_is_Equal_value_must_be_valid_k8s_label_value",
     message: "a valid label value must be an empty string or consist of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character"
     expression:
-      "this.operator in [0, 1] ? this.value.matches('^([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$') : true"
+      "this.operator in ['', 'Equal'] ? this.value.matches('^([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$') : true"
   };
 
   option (buf.validate.message).cel = {
-    id :"when_op_exists_value_must_be_emtpy",
-    message: "when operator is EXISTS, value must be empty "
+    id :"when_op_Exists_value_must_be_emtpy",
+    message: "when operator is Exists, value must be empty "
     expression:
-      "this.operator == 2 ? this.value == '' : true"
+      "this.operator == 'Exists' ? this.value == '' : true"
   };
 
   // Key is the key of the toleration.
@@ -72,7 +72,11 @@ message Toleration {
   }];
 
   // Operator is the operator for the toleration.
-  Operator operator = 2;
+  // Valid operators are Exists, Equal.
+  // Defaults to "Equal" if not specified.
+  string operator = 2[(buf.validate.field).string = {
+    in: ["Exists", "Equal", ""],
+  }];
 
   // Value is the value of the toleration.
   string value = 3[(buf.validate.field) = {
@@ -82,28 +86,9 @@ message Toleration {
   }];
 
   // Effect is the effect for the toleration.
-  Effect effect = 4;
-
-  // Operator represents the operator for the toleration.
-  enum Operator {
-    // OPERATOR_UNSPECIFIED is the default value.
-    OPERATOR_UNSPECIFIED = 0;
-    // EQUAL is the Equal operator.
-    EQUAL = 1;
-    // EXISTS is the Exists operator.
-    EXISTS = 2;
-  }
-
-  // Effect represents the effect for the toleration.
-  enum Effect {
-    // EFFECT_UNSPECIFIED is the default value.
-    // Empty toleration effect means match all taint effects.
-    EFFECT_UNSPECIFIED = 0;
-    // NO_EXECUTE is the NoExecute effect.
-    NO_EXECUTE = 1;
-    // NO_SCHEDULE is the NoSchedule effect.
-    NO_SCHEDULE = 2;
-    // PREFER_NO_SCHEDULE is the PreferNoSchedule effect.
-    PREFER_NO_SCHEDULE = 3;
-  }
+  // Valid effects are NoSchedule, PreferNoSchedule, NoExecute.
+  // An empty effect matches all effects.
+  string effect = 4[(buf.validate.field).string = {
+    in: ["NoSchedule", "PreferNoSchedule", "NoExecute", ""],
+  }];
 }

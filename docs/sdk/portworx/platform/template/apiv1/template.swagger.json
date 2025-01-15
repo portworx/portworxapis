@@ -12,7 +12,7 @@
     "paths": {
         "/core/v1/templates": {
             "get": {
-                "summary": "List API lists all the templates for a tenant",
+                "summary": "List API lists all the templates for a Tenant (Organization)",
                 "operationId": "TemplateService_ListTemplates",
                 "responses": {
                     "200": {
@@ -39,7 +39,7 @@
                 "parameters": [
                     {
                         "name": "tenantId",
-                        "description": "Tenant ID for which the credentials will be listed.",
+                        "description": "Tenant (Organization) ID for which the credentials will be listed.",
                         "in": "query",
                         "required": false,
                         "schema": {
@@ -257,7 +257,7 @@
         },
         "/core/v1/templates:search": {
             "post": {
-                "summary": "List API lists all the templates for a tenant",
+                "summary": "List API lists all the templates for a Tenant (Organization)",
                 "operationId": "TemplateService_ListTemplates2",
                 "responses": {
                     "200": {
@@ -289,7 +289,7 @@
                             }
                         }
                     },
-                    "description": "Request to list the templates for a tenant.",
+                    "description": "Request to list the templates for a Tenant (Organization).",
                     "required": true
                 },
                 "tags": [
@@ -299,7 +299,7 @@
         },
         "/core/v1/tenants/{tenantId}/templates": {
             "post": {
-                "summary": "Create API creates a set of templates for a tenant.",
+                "summary": "Create API creates a set of templates for a Tenant (Organization).",
                 "operationId": "TemplateService_CreateTemplate",
                 "responses": {
                     "200": {
@@ -326,7 +326,7 @@
                 "parameters": [
                     {
                         "name": "tenantId",
-                        "description": "The parent tenant id under which template will be created.",
+                        "description": "The parent Tenant (Organization) id under which template will be created.",
                         "in": "path",
                         "required": true,
                         "schema": {
@@ -582,14 +582,14 @@
                     "INVITATION"
                 ],
                 "default": "TYPE_UNSPECIFIED",
-                "description": "Type of the resource.\n\n - TYPE_UNSPECIFIED: Unspecified, do not use.\n - ACCOUNT: Currently supported infra resources.\nInfra resource of type account.\n - TENANT: Infra resource of type tenant.\n - PROJECT: Infra resource of type projects.\n - TARGET_CLUSTER: Infra resource target cluster.\n - NAMESPACE: Infra resource of type namespace.\n - CREDENTIAL: Infra resource of type credential.\n - BACKUP_LOCATION: Infra resource of type backup location.\n - BACKUP_POLICY: Infra resource of type backup policy.\n - TEMPLATE: Infra resource of type template.\n - INVITATION: Infra resource of type invitation."
+                "description": "Type of the resource.\n\n - TYPE_UNSPECIFIED: Unspecified, do not use.\n - ACCOUNT: Currently supported infra resources.\nInfra resource of type account.\n - TENANT: Infra resource of type Tenant (Organization).\n - PROJECT: Infra resource of type projects.\n - TARGET_CLUSTER: Infra resource target cluster.\n - NAMESPACE: Infra resource of type namespace.\n - CREDENTIAL: Infra resource of type credential.\n - BACKUP_LOCATION: Infra resource of type backup location.\n - BACKUP_POLICY: Infra resource of type backup policy.\n - TEMPLATE: Infra resource of type template.\n - INVITATION: Infra resource of type invitation."
             },
             "v1ListTemplatesRequest": {
                 "type": "object",
                 "properties": {
                     "tenantId": {
                         "type": "string",
-                        "description": "Tenant ID for which the credentials will be listed."
+                        "description": "Tenant (Organization) ID for which the credentials will be listed."
                     },
                     "pagination": {
                         "$ref": "#/components/schemas/v1PageBasedPaginationRequest"
@@ -610,7 +610,7 @@
                         "$ref": "#/components/schemas/v1Sort"
                     }
                 },
-                "description": "Request to list the templates for a tenant."
+                "description": "Request to list the templates for a Tenant (Organization)."
             },
             "v1ListTemplatesResponse": {
                 "type": "object",
@@ -620,7 +620,7 @@
                         "items": {
                             "$ref": "#/components/schemas/v1Template"
                         },
-                        "description": "The list of templates scoped to a tenant."
+                        "description": "The list of templates scoped to a Tenant (Organization)."
                     },
                     "pagination": {
                         "$ref": "#/components/schemas/v1PageBasedPaginationResponse"

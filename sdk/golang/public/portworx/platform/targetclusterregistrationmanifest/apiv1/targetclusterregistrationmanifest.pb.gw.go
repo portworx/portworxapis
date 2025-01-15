@@ -91,6 +91,66 @@ func local_request_TargetClusterRegistrationManifestService_GenerateTargetCluste
 
 }
 
+func request_TargetClusterRegistrationManifestService_ReRegisterTargetCluster_0(ctx context.Context, marshaler runtime.Marshaler, client TargetClusterRegistrationManifestServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq ReRegisterTargetClusterRequest
+	var metadata runtime.ServerMetadata
+
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["cluster_id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "cluster_id")
+	}
+
+	protoReq.ClusterId, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "cluster_id", err)
+	}
+
+	msg, err := client.ReRegisterTargetCluster(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+
+}
+
+func local_request_TargetClusterRegistrationManifestService_ReRegisterTargetCluster_0(ctx context.Context, marshaler runtime.Marshaler, server TargetClusterRegistrationManifestServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq ReRegisterTargetClusterRequest
+	var metadata runtime.ServerMetadata
+
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["cluster_id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "cluster_id")
+	}
+
+	protoReq.ClusterId, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "cluster_id", err)
+	}
+
+	msg, err := server.ReRegisterTargetCluster(ctx, &protoReq)
+	return msg, metadata, err
+
+}
+
 // RegisterTargetClusterRegistrationManifestServiceHandlerServer registers the http handlers for service TargetClusterRegistrationManifestService to "mux".
 // UnaryRPC     :call TargetClusterRegistrationManifestServiceServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
@@ -122,27 +182,52 @@ func RegisterTargetClusterRegistrationManifestServiceHandlerServer(ctx context.C
 
 	})
 
+	mux.Handle("POST", pattern_TargetClusterRegistrationManifestService_ReRegisterTargetCluster_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/public.portworx.platform.targetclusterregistrationmanifest.v1.TargetClusterRegistrationManifestService/ReRegisterTargetCluster", runtime.WithHTTPPathPattern("/core/v1/clusters/{cluster_id}:reregister"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_TargetClusterRegistrationManifestService_ReRegisterTargetCluster_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_TargetClusterRegistrationManifestService_ReRegisterTargetCluster_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
 	return nil
 }
 
 // RegisterTargetClusterRegistrationManifestServiceHandlerFromEndpoint is same as RegisterTargetClusterRegistrationManifestServiceHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
 func RegisterTargetClusterRegistrationManifestServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
-	conn, err := grpc.DialContext(ctx, endpoint, opts...)
+	conn, err := grpc.NewClient(endpoint, opts...)
 	if err != nil {
 		return err
 	}
 	defer func() {
 		if err != nil {
 			if cerr := conn.Close(); cerr != nil {
-				grpclog.Infof("Failed to close conn to %s: %v", endpoint, cerr)
+				grpclog.Errorf("Failed to close conn to %s: %v", endpoint, cerr)
 			}
 			return
 		}
 		go func() {
 			<-ctx.Done()
 			if cerr := conn.Close(); cerr != nil {
-				grpclog.Infof("Failed to close conn to %s: %v", endpoint, cerr)
+				grpclog.Errorf("Failed to close conn to %s: %v", endpoint, cerr)
 			}
 		}()
 	}()
@@ -185,13 +270,39 @@ func RegisterTargetClusterRegistrationManifestServiceHandlerClient(ctx context.C
 
 	})
 
+	mux.Handle("POST", pattern_TargetClusterRegistrationManifestService_ReRegisterTargetCluster_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/public.portworx.platform.targetclusterregistrationmanifest.v1.TargetClusterRegistrationManifestService/ReRegisterTargetCluster", runtime.WithHTTPPathPattern("/core/v1/clusters/{cluster_id}:reregister"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_TargetClusterRegistrationManifestService_ReRegisterTargetCluster_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_TargetClusterRegistrationManifestService_ReRegisterTargetCluster_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
 	return nil
 }
 
 var (
 	pattern_TargetClusterRegistrationManifestService_GenerateTargetClusterRegistrationManifest_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"core", "v1", "tenants", "tenant_id"}, "registrationManifests"))
+
+	pattern_TargetClusterRegistrationManifestService_ReRegisterTargetCluster_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"core", "v1", "clusters", "cluster_id"}, "reregister"))
 )
 
 var (
 	forward_TargetClusterRegistrationManifestService_GenerateTargetClusterRegistrationManifest_0 = runtime.ForwardResponseMessage
+
+	forward_TargetClusterRegistrationManifestService_ReRegisterTargetCluster_0 = runtime.ForwardResponseMessage
 )

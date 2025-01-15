@@ -12,7 +12,7 @@
     "paths": {
         "/core/v1/projects": {
             "get": {
-                "summary": "List API lists all the projects for a tenant",
+                "summary": "List API lists all the projects for a Tenant (Organization)",
                 "operationId": "ProjectService_ListProjects",
                 "responses": {
                     "200": {
@@ -39,7 +39,7 @@
                 "parameters": [
                     {
                         "name": "tenantId",
-                        "description": "Tenant id for which projects to be listed.",
+                        "description": "Tenant (Organization) id for which projects to be listed.",
                         "in": "query",
                         "required": false,
                         "schema": {
@@ -361,7 +361,7 @@
         },
         "/core/v1/projects:search": {
             "post": {
-                "summary": "List API lists all the projects for a tenant",
+                "summary": "List API lists all the projects for a Tenant (Organization)",
                 "operationId": "ProjectService_ListProjects2",
                 "responses": {
                     "200": {
@@ -403,7 +403,7 @@
         },
         "/core/v1/tenants/{tenantId}/projects": {
             "post": {
-                "summary": "Create project api creates a project.",
+                "summary": "Create project api creates a project under a given Tenant (Organization).",
                 "operationId": "ProjectService_CreateProject",
                 "responses": {
                     "200": {
@@ -430,7 +430,7 @@
                 "parameters": [
                     {
                         "name": "tenantId",
-                        "description": "The parent tenant under which project will be created",
+                        "description": "The parent Tenant (Organization) under which project will be created",
                         "in": "path",
                         "required": true,
                         "schema": {
@@ -672,14 +672,14 @@
                     "INVITATION"
                 ],
                 "default": "TYPE_UNSPECIFIED",
-                "description": "Type of the resource.\n\n - TYPE_UNSPECIFIED: Unspecified, do not use.\n - ACCOUNT: Currently supported infra resources.\nInfra resource of type account.\n - TENANT: Infra resource of type tenant.\n - PROJECT: Infra resource of type projects.\n - TARGET_CLUSTER: Infra resource target cluster.\n - NAMESPACE: Infra resource of type namespace.\n - CREDENTIAL: Infra resource of type credential.\n - BACKUP_LOCATION: Infra resource of type backup location.\n - BACKUP_POLICY: Infra resource of type backup policy.\n - TEMPLATE: Infra resource of type template.\n - INVITATION: Infra resource of type invitation."
+                "description": "Type of the resource.\n\n - TYPE_UNSPECIFIED: Unspecified, do not use.\n - ACCOUNT: Currently supported infra resources.\nInfra resource of type account.\n - TENANT: Infra resource of type Tenant (Organization).\n - PROJECT: Infra resource of type projects.\n - TARGET_CLUSTER: Infra resource target cluster.\n - NAMESPACE: Infra resource of type namespace.\n - CREDENTIAL: Infra resource of type credential.\n - BACKUP_LOCATION: Infra resource of type backup location.\n - BACKUP_POLICY: Infra resource of type backup policy.\n - TEMPLATE: Infra resource of type template.\n - INVITATION: Infra resource of type invitation."
             },
             "v1ListProjectsRequest": {
                 "type": "object",
                 "properties": {
                     "tenantId": {
                         "type": "string",
-                        "description": "Tenant id for which projects to be listed."
+                        "description": "Tenant (Organization) id for which projects to be listed."
                     },
                     "infraResourceSelector": {
                         "$ref": "#/components/schemas/v1ResourceSelector"

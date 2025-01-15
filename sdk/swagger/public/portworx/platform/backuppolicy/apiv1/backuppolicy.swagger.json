@@ -12,7 +12,7 @@
     "paths": {
         "/core/v1/backupPolicies": {
             "get": {
-                "summary": "List API lists all the backup policies for a tenant",
+                "summary": "List API lists all the backup policies for a Tenant (Organization)",
                 "operationId": "BackupPolicyService_ListBackupPolicies",
                 "responses": {
                     "200": {
@@ -39,7 +39,7 @@
                 "parameters": [
                     {
                         "name": "tenantId",
-                        "description": "Tenant ID for which the backup policies will be listed.",
+                        "description": "Tenant (Organization) ID for which the backup policies will be listed.",
                         "in": "query",
                         "required": false,
                         "schema": {
@@ -310,7 +310,7 @@
         },
         "/core/v1/backupPolicies:search": {
             "post": {
-                "summary": "List API lists all the backup policies for a tenant",
+                "summary": "List API lists all the backup policies for a Tenant (Organization)",
                 "operationId": "BackupPolicyService_ListBackupPolicies2",
                 "responses": {
                     "200": {
@@ -342,7 +342,7 @@
                             }
                         }
                     },
-                    "description": "Request to list the backup policies for a tenant.",
+                    "description": "Request to list the backup policies for a Tenant (Organization).",
                     "required": true
                 },
                 "tags": [
@@ -352,7 +352,7 @@
         },
         "/core/v1/tenants/{tenantId}/backupPolicies": {
             "post": {
-                "summary": "Create API creates a backup policy for a tenant.",
+                "summary": "Create API creates a backup policy for a Tenant (Organization).",
                 "operationId": "BackupPolicyService_CreateBackupPolicy",
                 "responses": {
                     "200": {
@@ -379,7 +379,7 @@
                 "parameters": [
                     {
                         "name": "tenantId",
-                        "description": "The parent tenant id under which schedule will be created.",
+                        "description": "The parent Tenant (Organization) id under which schedule will be created.",
                         "in": "path",
                         "required": true,
                         "schema": {
@@ -560,7 +560,7 @@
                     "INVITATION"
                 ],
                 "default": "TYPE_UNSPECIFIED",
-                "description": "Type of the resource.\n\n - TYPE_UNSPECIFIED: Unspecified, do not use.\n - ACCOUNT: Currently supported infra resources.\nInfra resource of type account.\n - TENANT: Infra resource of type tenant.\n - PROJECT: Infra resource of type projects.\n - TARGET_CLUSTER: Infra resource target cluster.\n - NAMESPACE: Infra resource of type namespace.\n - CREDENTIAL: Infra resource of type credential.\n - BACKUP_LOCATION: Infra resource of type backup location.\n - BACKUP_POLICY: Infra resource of type backup policy.\n - TEMPLATE: Infra resource of type template.\n - INVITATION: Infra resource of type invitation."
+                "description": "Type of the resource.\n\n - TYPE_UNSPECIFIED: Unspecified, do not use.\n - ACCOUNT: Currently supported infra resources.\nInfra resource of type account.\n - TENANT: Infra resource of type Tenant (Organization).\n - PROJECT: Infra resource of type projects.\n - TARGET_CLUSTER: Infra resource target cluster.\n - NAMESPACE: Infra resource of type namespace.\n - CREDENTIAL: Infra resource of type credential.\n - BACKUP_LOCATION: Infra resource of type backup location.\n - BACKUP_POLICY: Infra resource of type backup policy.\n - TEMPLATE: Infra resource of type template.\n - INVITATION: Infra resource of type invitation."
             },
             "v1IntervalPolicy": {
                 "type": "object",
@@ -578,7 +578,7 @@
                 "properties": {
                     "tenantId": {
                         "type": "string",
-                        "description": "Tenant ID for which the backup policies will be listed."
+                        "description": "Tenant (Organization) ID for which the backup policies will be listed."
                     },
                     "pagination": {
                         "$ref": "#/components/schemas/v1PageBasedPaginationRequest"
@@ -599,7 +599,7 @@
                         "$ref": "#/components/schemas/v1RespData"
                     }
                 },
-                "description": "Request to list the backup policies for a tenant."
+                "description": "Request to list the backup policies for a Tenant (Organization)."
             },
             "v1ListBackupPoliciesResponse": {
                 "type": "object",
@@ -609,7 +609,7 @@
                         "items": {
                             "$ref": "#/components/schemas/v1BackupPolicy"
                         },
-                        "description": "The list of backup policies scoped to a tenant."
+                        "description": "The list of backup policies scoped to a Tenant (Organization)."
                     },
                     "pagination": {
                         "$ref": "#/components/schemas/v1PageBasedPaginationResponse"

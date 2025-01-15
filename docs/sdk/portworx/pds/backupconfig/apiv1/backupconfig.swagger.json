@@ -39,7 +39,7 @@
                 "parameters": [
                     {
                         "name": "tenantId",
-                        "description": "Tenant ID for which the backup configurations will be listed.",
+                        "description": "Tenant (Organization) ID for which the backup configurations will be listed.",
                         "in": "query",
                         "required": false,
                         "schema": {

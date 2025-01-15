@@ -293,7 +293,7 @@ message CreateDataServiceDeploymentRequest {
 
 // Request to list the data service deployment resources.
 message ListDataServiceDeploymentsRequest {
-  // tenant ID for which data service deployments need to be fetched.
+  // Tenant (Organization) ID for which data service deployments need to be fetched.
   string tenant_id = 1 [(google.api.field_behavior) = REQUIRED];
 
   // Provides the key in labels and associated values for which data service deployments need to be listed.

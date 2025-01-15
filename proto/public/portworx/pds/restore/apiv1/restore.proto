@@ -100,7 +100,7 @@ message GetRestoreRequest {
 message ListRestoresRequest {
   // Specifies a filter to list restores.
   oneof list_by {
-    // Tenant ID for which the restore will be listed.
+    // Tenant  (Organization) ID for which the restore will be listed.
     string tenant_id = 1;
     // Project ID for which the restore will be listed.
     string project_id = 2;

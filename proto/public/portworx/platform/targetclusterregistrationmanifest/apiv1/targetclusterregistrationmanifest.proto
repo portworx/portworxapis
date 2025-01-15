@@ -27,7 +27,7 @@ option java_outer_classname = "TargetClusterRegistrationManifestProto";
 
 // TargetClusterRegistrationManifestService provides API to generate registration manifest.
 service TargetClusterRegistrationManifestService {
-  // GetTargetClusterRegistrationManifest fetches registration manifest for the given request.
+  // GetTargetClusterRegistrationManifest fetches registration manifest for the given request under specified Tenant (Organization).
   rpc GenerateTargetClusterRegistrationManifest(GenerateTargetClusterRegistrationManifestRequest)
       returns (TargetClusterRegistrationManifest) {
     option(google.api.http) = {
@@ -35,11 +35,20 @@ service TargetClusterRegistrationManifestService {
       body: "*"
     };
   }
+
+  // ReRegisterTargetCluster fetches manifest for re-registration of target cluster.
+  rpc ReRegisterTargetCluster(ReRegisterTargetClusterRequest)
+      returns (TargetClusterRegistrationManifest) {
+    option(google.api.http) = {
+      post: "/core/v1/clusters/{cluster_id}:reregister"
+      body: "*"
+    };
+  }
 }
 
 // GetTargetClusterRegistrationManifestRequest is the request message to the GetTargetClusterRegistrationManifest API.
 message GenerateTargetClusterRegistrationManifestRequest {
-  // tenanat_id is the id of the tenant for which manifest is requested.
+  // tenanat_id is the id of the Tenant (Organization) for which manifest is requested.
   string tenant_id = 1;
   // cluster_name which the user wants to use.
   string cluster_name = 2 [(google.api.field_behavior) = OPTIONAL];
@@ -91,4 +100,12 @@ message ProxyConfig {
   string no_proxy = 5;
   // ca cert of the proxy server.
   string ca_cert = 6;
+}
+
+// ReRegisterTargetClusterRequest is the request message to the ReRegisterTargetCluster API.
+message ReRegisterTargetClusterRequest {
+  // cluster ID is the id of the target cluster already registered with control plane.
+  string cluster_id = 1;
+  // Config for generating the manifest.
+  Config config = 2;
 }

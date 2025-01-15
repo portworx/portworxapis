@@ -196,10 +196,6 @@
                         "description": "email of the first account user.",
                         "readOnly": true
                     },
-                    "dnsName": {
-                        "type": "string",
-                        "description": "Account DNS name."
-                    },
                     "displayName": {
                         "type": "string",
                         "description": "Display name of Account."
@@ -223,7 +219,7 @@
                         "$ref": "#/components/schemas/v1ZuoraSubscriptionInfo"
                     }
                 },
-                "description": "Desired configuration of the account."
+                "description": "Desired configuration of the account.\n@param dns_name has been deprecated and moved to config management."
             },
             "v1Meta": {
                 "type": "object",

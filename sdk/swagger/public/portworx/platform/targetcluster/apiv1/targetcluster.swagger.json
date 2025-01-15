@@ -12,7 +12,7 @@
     "paths": {
         "/core/v1/clusters": {
             "get": {
-                "summary": "List API lists all the target clusters for a tenant",
+                "summary": "List API lists all the target clusters for a Tenant (Organization)",
                 "operationId": "TargetClusterService_ListTargetClusters",
                 "responses": {
                     "200": {
@@ -39,7 +39,7 @@
                 "parameters": [
                     {
                         "name": "tenantId",
-                        "description": "List target clusters associated with a tenant.",
+                        "description": "List target clusters associated with a Tenant (Organization).",
                         "in": "query",
                         "required": true,
                         "schema": {
@@ -332,7 +332,7 @@
         },
         "/core/v1/clusters:search": {
             "post": {
-                "summary": "List API lists all the target clusters for a tenant",
+                "summary": "List API lists all the target clusters for a Tenant (Organization)",
                 "operationId": "TargetClusterService_ListTargetClusters2",
                 "responses": {
                     "200": {
@@ -535,7 +535,7 @@
                     "INVITATION"
                 ],
                 "default": "TYPE_UNSPECIFIED",
-                "description": "Type of the resource.\n\n - TYPE_UNSPECIFIED: Unspecified, do not use.\n - ACCOUNT: Currently supported infra resources.\nInfra resource of type account.\n - TENANT: Infra resource of type tenant.\n - PROJECT: Infra resource of type projects.\n - TARGET_CLUSTER: Infra resource target cluster.\n - NAMESPACE: Infra resource of type namespace.\n - CREDENTIAL: Infra resource of type credential.\n - BACKUP_LOCATION: Infra resource of type backup location.\n - BACKUP_POLICY: Infra resource of type backup policy.\n - TEMPLATE: Infra resource of type template.\n - INVITATION: Infra resource of type invitation."
+                "description": "Type of the resource.\n\n - TYPE_UNSPECIFIED: Unspecified, do not use.\n - ACCOUNT: Currently supported infra resources.\nInfra resource of type account.\n - TENANT: Infra resource of type Tenant (Organization).\n - PROJECT: Infra resource of type projects.\n - TARGET_CLUSTER: Infra resource target cluster.\n - NAMESPACE: Infra resource of type namespace.\n - CREDENTIAL: Infra resource of type credential.\n - BACKUP_LOCATION: Infra resource of type backup location.\n - BACKUP_POLICY: Infra resource of type backup policy.\n - TEMPLATE: Infra resource of type template.\n - INVITATION: Infra resource of type invitation."
             },
             "v1KubePlatformType": {
                 "type": "string",
@@ -556,7 +556,7 @@
                 "properties": {
                     "tenantId": {
                         "type": "string",
-                        "description": "List target clusters associated with a tenant."
+                        "description": "List target clusters associated with a Tenant (Organization)."
                     },
                     "pagination": {
                         "$ref": "#/components/schemas/v1PageBasedPaginationRequest"

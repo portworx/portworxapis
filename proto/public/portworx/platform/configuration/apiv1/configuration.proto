@@ -1,0 +1,51 @@
+// Please use the following editor setup for this file:
+// Tab size=2; Tabs as spaces; Clean up trailing whitepsace
+//
+// In vim add: au FileType proto setl sw=2 ts=2 expandtab list
+//
+// In vscode install vscode-proto3 extension and add this to your settings.json:
+//    "[proto3]": {
+//        "editor.tabSize": 2,
+//        "editor.insertSpaces": true,
+//        "editor.rulers": [80],
+//        "editor.detectIndentation": true,
+//        "files.trimTrailingWhitespace": true
+//    }
+//
+
+syntax = "proto3";
+
+package public.portworx.platform.configuration.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/api/field_behavior.proto";
+import "google/api/field_info.proto";
+import "google/protobuf/struct.proto";
+
+import "public/portworx/platform/configuration/apiv1/dnsconfig.proto";
+import "public/portworx/common/apiv1/meta.proto";
+import "public/portworx/common/apiv1/sort.proto";
+import "public/portworx/common/apiv1/pagination.proto";
+
+option go_package = "github.com/portworx/portworxapis/proto/public/portworx/platform/configuration/apiv1;configuration";
+option java_multiple_files = true;
+option java_package = "com.public.portworx.platform.configuration.v1";
+option java_outer_classname = "ConfigurationProto";
+
+// Config of a Configuration Instance.
+message Config {
+  // Kind of configuration
+  string kind = 1;
+  // Set the config once, this is useful, when account defaults should not be overriden by Tenant (Organization).
+  bool set_once = 2;
+  // If the config is the current 'default' at Tenant (Organization) level.
+  bool is_default = 3;
+  // config value
+  oneof value{
+    // DNS Config
+    DNSConfig dns_config = 101;
+    // Key, value pairs for the config
+    google.protobuf.Struct unstructured = 102;
+  }
+}

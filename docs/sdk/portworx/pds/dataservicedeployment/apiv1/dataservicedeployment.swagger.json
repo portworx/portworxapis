@@ -401,7 +401,7 @@
                         "$ref": "#/components/schemas/v1PDSApplicationResourceType"
                     },
                     "op": {
-                        "$ref": "#/components/schemas/v1SelectorOperator"
+                        "$ref": "#/components/schemas/SelectorOperator"
                     },
                     "values": {
                         "type": "array",
@@ -420,7 +420,7 @@
                         "$ref": "#/components/schemas/v1InfraResourceType"
                     },
                     "op": {
-                        "$ref": "#/components/schemas/v1SelectorOperator"
+                        "$ref": "#/components/schemas/SelectorOperator"
                     },
                     "values": {
                         "type": "array",
@@ -440,7 +440,7 @@
                         "description": "Key of key,value pair against which filtering needs to be performs."
                     },
                     "op": {
-                        "$ref": "#/components/schemas/v1SelectorOperator"
+                        "$ref": "#/components/schemas/SelectorOperator"
                     },
                     "values": {
                         "type": "array",
@@ -451,6 +451,17 @@
                     }
                 },
                 "description": "Filter for a given key."
+            },
+            "SelectorOperator": {
+                "type": "string",
+                "enum": [
+                    "OPERATOR_UNSPECIFIED",
+                    "IN",
+                    "NOT_IN",
+                    "LIKE"
+                ],
+                "default": "OPERATOR_UNSPECIFIED",
+                "description": "Operator specifies the relationship between the provided (key,value) pairs in the response.\n\n - OPERATOR_UNSPECIFIED: Unspecified, do not use.\n - IN: IN specifies that the key should be associated with atleast 1 of the element in value list.\n - NOT_IN: NOT_IN specifies that the key should not be associated with any of the element in value list.\n - LIKE: LIKE specified that the key should be of a specified pattern"
             },
             "SortByField": {
                 "type": "string",
@@ -463,17 +474,6 @@
                 ],
                 "default": "FIELD_UNSPECIFIED",
                 "description": "Field names for sorting the list of resources.\n\n - FIELD_UNSPECIFIED: Unspecified, do not use.\n - NAME: Sorting based on the name of the resource.\n - CREATED_AT: Sorting on create time of the resource.\n - UPDATED_AT: Sorting on update time of the resource.\n - PHASE: Sorting on phase of the resource."
-            },
-            "TolerationEffect": {
-                "type": "string",
-                "enum": [
-                    "EFFECT_UNSPECIFIED",
-                    "NO_EXECUTE",
-                    "NO_SCHEDULE",
-                    "PREFER_NO_SCHEDULE"
-                ],
-                "default": "EFFECT_UNSPECIFIED",
-                "description": "Effect represents the effect for the toleration.\n\n - EFFECT_UNSPECIFIED: EFFECT_UNSPECIFIED is the default value.\nEmpty toleration effect means match all taint effects.\n - NO_EXECUTE: NO_EXECUTE is the NoExecute effect.\n - NO_SCHEDULE: NO_SCHEDULE is the NoSchedule effect.\n - PREFER_NO_SCHEDULE: PREFER_NO_SCHEDULE is the PreferNoSchedule effect."
             },
             "googlerpcStatus": {
                 "type": "object",
@@ -855,7 +855,7 @@
                     "INVITATION"
                 ],
                 "default": "TYPE_UNSPECIFIED",
-                "description": "Type of the resource.\n\n - TYPE_UNSPECIFIED: Unspecified, do not use.\n - ACCOUNT: Currently supported infra resources.\nInfra resource of type account.\n - TENANT: Infra resource of type tenant.\n - PROJECT: Infra resource of type projects.\n - TARGET_CLUSTER: Infra resource target cluster.\n - NAMESPACE: Infra resource of type namespace.\n - CREDENTIAL: Infra resource of type credential.\n - BACKUP_LOCATION: Infra resource of type backup location.\n - BACKUP_POLICY: Infra resource of type backup policy.\n - TEMPLATE: Infra resource of type template.\n - INVITATION: Infra resource of type invitation."
+                "description": "Type of the resource.\n\n - TYPE_UNSPECIFIED: Unspecified, do not use.\n - ACCOUNT: Currently supported infra resources.\nInfra resource of type account.\n - TENANT: Infra resource of type Tenant (Organization).\n - PROJECT: Infra resource of type projects.\n - TARGET_CLUSTER: Infra resource target cluster.\n - NAMESPACE: Infra resource of type namespace.\n - CREDENTIAL: Infra resource of type credential.\n - BACKUP_LOCATION: Infra resource of type backup location.\n - BACKUP_POLICY: Infra resource of type backup policy.\n - TEMPLATE: Infra resource of type template.\n - INVITATION: Infra resource of type invitation."
             },
             "v1InstanceInfo": {
                 "type": "object",
@@ -921,7 +921,7 @@
                 "properties": {
                     "tenantId": {
                         "type": "string",
-                        "description": "tenant ID for which data service deployments need to be fetched."
+                        "description": "Tenant (Organization) ID for which data service deployments need to be fetched."
                     },
                     "labelSelector": {
                         "$ref": "#/components/schemas/v1Selector"
@@ -1153,17 +1153,6 @@
                 },
                 "description": "Selector is used to query resources using the associated labels or field names."
             },
-            "v1SelectorOperator": {
-                "type": "string",
-                "enum": [
-                    "OPERATOR_UNSPECIFIED",
-                    "IN",
-                    "NOT_IN",
-                    "LIKE"
-                ],
-                "default": "OPERATOR_UNSPECIFIED",
-                "description": "Operator specifies the relationship between the provided (key,value) pairs in the response.\n\n - OPERATOR_UNSPECIFIED: Unspecified, do not use.\n - IN: IN specifies that the key should be associated with atleast 1 of the element in value list.\n - NOT_IN: NOT_IN specifies that the key should not be associated with any of the element in value list.\n - LIKE: LIKE specified that the key should be of a specified pattern"
-            },
             "v1Sort": {
                 "type": "object",
                 "properties": {
@@ -1259,27 +1248,19 @@
                         "description": "Key is the key of the toleration."
                     },
                     "operator": {
-                        "$ref": "#/components/schemas/v1TolerationOperator"
+                        "type": "string",
+                        "description": "Operator is the operator for the toleration.\nValid operators are Exists, Equal.\nDefaults to \"Equal\" if not specified."
                     },
                     "value": {
                         "type": "string",
                         "description": "Value is the value of the toleration."
                     },
                     "effect": {
-                        "$ref": "#/components/schemas/TolerationEffect"
+                        "type": "string",
+                        "description": "Effect is the effect for the toleration.\nValid effects are NoSchedule, PreferNoSchedule, NoExecute.\nAn empty effect matches all effects."
                     }
                 },
                 "description": "Toleration represents a Kubernetes toleration."
-            },
-            "v1TolerationOperator": {
-                "type": "string",
-                "enum": [
-                    "OPERATOR_UNSPECIFIED",
-                    "EQUAL",
-                    "EXISTS"
-                ],
-                "default": "OPERATOR_UNSPECIFIED",
-                "description": "Operator represents the operator for the toleration.\n\n - OPERATOR_UNSPECIFIED: OPERATOR_UNSPECIFIED is the default value.\n - EQUAL: EQUAL is the Equal operator.\n - EXISTS: EXISTS is the Exists operator."
             }
         }
     }

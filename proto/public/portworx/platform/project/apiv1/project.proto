@@ -35,7 +35,7 @@ option java_outer_classname = "ProjectProto";
 
 // Project service provides APIs to interact with the Project entity.
 service ProjectService {
-  // Create project api creates a project.
+  // Create project api creates a project under a given Tenant (Organization).
   rpc CreateProject(CreateProjectRequest)
     returns (Project) {
       option(google.api.http) = {
@@ -64,7 +64,7 @@ service ProjectService {
   // (-- api-linter: core::0132::http-body=disabled
   //     api-linter: core::0132::http-method=disabled
   //     aip.dev/not-precedent: We need to do this because we can't have advance filters as query params. --)
-  // List Projects API lists the projects visible to the caller for the provided tenant.
+  // List Projects API lists the projects visible to the caller for the provided Tenant (Organization).
   rpc ListProjects(ListProjectsRequest)
     returns (ListProjectsResponse) {
     option(google.api.http) = {
@@ -75,7 +75,7 @@ service ProjectService {
       }
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "List API lists all the projects for a tenant"
+      summary: "List API lists all the projects for a Tenant (Organization)"
   };
   }
 
@@ -193,10 +193,10 @@ message PDSResources {
 
 // Request to create a project.
 message CreateProjectRequest {
-  // The parent tenant under which project will be created
+  // The parent Tenant (Organization) under which project will be created
   // (-- api-linter: core::0133::request-unknown-fields=disabled
   //     aip.dev/not-precedent: We need this field for to support creation of
-  //     the resource in the tenant context. --)
+  //     the resource in the Tenant (Organization) context. --)
   string tenant_id = 1;
   // Details of the project supplied by the user.
   Project project = 2;
@@ -221,7 +221,7 @@ message GetProjectRequest {
 // and it takes the multiple selector details for which the projects visible to the caller
 // will be returned.
 message ListProjectsRequest {
-  // Tenant id for which projects to be listed.
+  // Tenant (Organization) id for which projects to be listed.
   string tenant_id = 1;
   // Filtering list of projects based on the provided resource details..
   public.portworx.common.v1.ResourceSelector infra_resource_selector = 2;

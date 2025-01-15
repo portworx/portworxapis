@@ -57,7 +57,7 @@
                     },
                     {
                         "name": "tenantId",
-                        "description": "Tenant UID for which the IAM should be listed.",
+                        "description": "Tenant (Organization) UID for which the IAM should be listed.",
                         "in": "query",
                         "required": false,
                         "schema": {
@@ -120,6 +120,24 @@
                         "schema": {
                             "type": "string",
                             "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "tenantUid",
+                        "description": "Tenant (Organization) UID for which the IAM should be listed.",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "projectUid",
+                        "description": "Project UID for which the IAM should be listed.",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 ],
@@ -194,6 +212,26 @@
                         }
                     }
                 },
+                "parameters": [
+                    {
+                        "name": "tenantId",
+                        "description": "Tenant (Organization) ID in context to which the permissions of the user to be listed.",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "projectId",
+                        "description": "permission request is to list the permissions of the user on given project.",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "tags": [
                     "IAMService"
                 ]
@@ -284,7 +322,7 @@
         },
         "/core/v1/iam/{actorId}:grant": {
             "post": {
-                "summary": "GrantIAM API creates new IAM role-binding at tenant, project and account level.",
+                "summary": "GrantIAM API creates new IAM role-binding at Tenant (Organization), project and account level.",
                 "operationId": "IAMService_GrantIAM",
                 "responses": {
                     "200": {
@@ -336,7 +374,7 @@
         },
         "/core/v1/iam/{actorId}:revoke": {
             "post": {
-                "summary": "RevokeIAM API delete IAM role-binding at tenant, project and account level.",
+                "summary": "RevokeIAM API delete IAM role-binding at Tenant (Organization), project and account level.",
                 "operationId": "IAMService_RevokeIAM",
                 "responses": {
                     "200": {
@@ -513,7 +551,7 @@
                     },
                     "tenantId": {
                         "type": "string",
-                        "description": "Tenant UID  under which user wants to add role binding."
+                        "description": "Tenant (Organization) UID  under which user wants to add role binding."
                     },
                     "projectId": {
                         "type": "string",
@@ -523,7 +561,7 @@
                         "$ref": "#/components/schemas/v1AccessPolicy"
                     }
                 },
-                "description": "GrantIAMRequest to grant add a new role in the IAM for tenant, project or account."
+                "description": "GrantIAMRequest to grant add a new role in the IAM for Tenant (Organization), project or account."
             },
             "IAMServiceRevokeIAMBody": {
                 "type": "object",
@@ -534,7 +572,7 @@
                     },
                     "tenantId": {
                         "type": "string",
-                        "description": "Tenant UID  under which user wants to delete role ."
+                        "description": "Tenant (Organization) UID  under which user wants to delete role ."
                     },
                     "projectId": {
                         "type": "string",
@@ -544,7 +582,7 @@
                         "$ref": "#/components/schemas/v1AccessPolicy"
                     }
                 },
-                "description": "RevokeIAMRequest to revoke/delete a role binding at tenant, project or account."
+                "description": "RevokeIAMRequest to revoke/delete a role binding at Tenant (Organization), project or account."
             },
             "SortOrderValue": {
                 "type": "string",
@@ -626,7 +664,7 @@
                         "items": {
                             "$ref": "#/components/schemas/v1RoleBinding"
                         },
-                        "description": "Tenant represents the tenant level role bindings and resource IDs."
+                        "description": "Tenant (Organization) represents the Organization level role bindings and resource IDs."
                     },
                     "project": {
                         "type": "array",
@@ -865,7 +903,7 @@
                 "properties": {
                     "roleName": {
                         "type": "string",
-                        "description": "Role name represents the role for a tenant/project/namespace."
+                        "description": "Role name represents the role for a Tenant (Organization)/project/namespace."
                     },
                     "resourceIds": {
                         "type": "array",
@@ -875,7 +913,7 @@
                         "description": "Resource IDs represent the IDs bounded for the given role."
                     }
                 },
-                "description": "RoleBinding represents the tenant/project/namespace level role bindings and resource IDS."
+                "description": "RoleBinding represents the Tenant (Organization)/project/namespace level role bindings and resource IDS."
             }
         }
     }

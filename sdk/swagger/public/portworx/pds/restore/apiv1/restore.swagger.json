@@ -91,7 +91,7 @@
                 "parameters": [
                     {
                         "name": "tenantId",
-                        "description": "Tenant ID for which the restore will be listed.",
+                        "description": "Tenant  (Organization) ID for which the restore will be listed.",
                         "in": "query",
                         "required": false,
                         "schema": {
@@ -341,27 +341,6 @@
                 ],
                 "default": "VALUE_UNSPECIFIED",
                 "description": "Value of sort order for the list of resources.\n\n - VALUE_UNSPECIFIED: Unspecified, do not use.\n - ASC: Sort order ascending.\n - DESC: Sort order descending."
-            },
-            "TolerationEffect": {
-                "type": "string",
-                "enum": [
-                    "EFFECT_UNSPECIFIED",
-                    "NO_EXECUTE",
-                    "NO_SCHEDULE",
-                    "PREFER_NO_SCHEDULE"
-                ],
-                "default": "EFFECT_UNSPECIFIED",
-                "description": "Effect represents the effect for the toleration.\n\n - EFFECT_UNSPECIFIED: EFFECT_UNSPECIFIED is the default value.\nEmpty toleration effect means match all taint effects.\n - NO_EXECUTE: NO_EXECUTE is the NoExecute effect.\n - NO_SCHEDULE: NO_SCHEDULE is the NoSchedule effect.\n - PREFER_NO_SCHEDULE: PREFER_NO_SCHEDULE is the PreferNoSchedule effect."
-            },
-            "TolerationOperator": {
-                "type": "string",
-                "enum": [
-                    "OPERATOR_UNSPECIFIED",
-                    "EQUAL",
-                    "EXISTS"
-                ],
-                "default": "OPERATOR_UNSPECIFIED",
-                "description": "Operator represents the operator for the toleration.\n\n - OPERATOR_UNSPECIFIED: OPERATOR_UNSPECIFIED is the default value.\n - EQUAL: EQUAL is the Equal operator.\n - EXISTS: EXISTS is the Exists operator."
             },
             "googlerpcStatus": {
                 "type": "object",
@@ -709,14 +688,16 @@
                         "description": "Key is the key of the toleration."
                     },
                     "operator": {
-                        "$ref": "#/components/schemas/TolerationOperator"
+                        "type": "string",
+                        "description": "Operator is the operator for the toleration.\nValid operators are Exists, Equal.\nDefaults to \"Equal\" if not specified."
                     },
                     "value": {
                         "type": "string",
                         "description": "Value is the value of the toleration."
                     },
                     "effect": {
-                        "$ref": "#/components/schemas/TolerationEffect"
+                        "type": "string",
+                        "description": "Effect is the effect for the toleration.\nValid effects are NoSchedule, PreferNoSchedule, NoExecute.\nAn empty effect matches all effects."
                     }
                 },
                 "description": "Toleration represents a Kubernetes toleration."

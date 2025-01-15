@@ -52,7 +52,7 @@ service TargetClusterService {
       }
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "List API lists all the target clusters for a tenant"
+      summary: "List API lists all the target clusters for a Tenant (Organization)"
   };
   }
 
@@ -84,7 +84,7 @@ service TargetClusterService {
 
 // ListTargetClusterRequest is a request message to the List TargetCluster API.
 message ListTargetClustersRequest {
-  // List target clusters associated with a tenant.
+  // List target clusters associated with a Tenant (Organization).
   string tenant_id = 1 [(google.api.field_behavior) = REQUIRED];
   // Pagination parameters for listing target clusters.
   public.portworx.common.v1.PageBasedPaginationRequest pagination = 2;

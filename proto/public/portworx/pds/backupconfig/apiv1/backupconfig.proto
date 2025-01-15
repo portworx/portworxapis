@@ -85,7 +85,7 @@ message GetBackupConfigRequest {
 message ListBackupConfigsRequest {
   // Specifies a filter to list the backup configurations.
   oneof list_by {
-    // Tenant ID for which the backup configurations will be listed.
+    // Tenant (Organization) ID for which the backup configurations will be listed.
     string tenant_id = 1;
 
     // Project ID for which the backup configurations will be listed.

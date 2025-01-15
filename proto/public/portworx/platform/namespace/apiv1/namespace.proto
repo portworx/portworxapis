@@ -48,7 +48,7 @@ service NamespaceService {
       }
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "List API lists all the namespaces for a tenant"
+      summary: "List API lists all the namespaces for a Tenant (Organization)"
     };
   }
 
@@ -63,7 +63,7 @@ service NamespaceService {
 
 // ListNamespacesRequest request message for the ListNamespaces API.
 message ListNamespacesRequest {
-  // tenant ID for which namespace need to be fetched.
+  // Tenant (Organization) ID for which namespace need to be fetched.
   string tenant_id = 1;
   // Provides the key in labels and associated values for which namespaces need to be listed.
   public.portworx.common.v1.Selector label_selector = 2;
